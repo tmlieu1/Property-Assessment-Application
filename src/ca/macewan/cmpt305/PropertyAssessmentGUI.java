@@ -21,6 +21,12 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+//implemented in Milestone 3
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+
 //java utilities
 import java.util.List;
 import java.util.ArrayList;
@@ -130,8 +136,22 @@ public class PropertyAssessmentGUI extends Application {
 		rootNode.setLeft(vBoxIn);
 		rootNode.setCenter(vBox);
 		
+		//webview
+		WebView map = new WebView();
+		WebEngine engine = map.getEngine();
+		String url = this.getClass().getResource("/ca/macewan/cmpt305/website.html").toExternalForm();
+		engine.load(url);
+		
+		//tabs
+		TabPane tabPane = new TabPane();
+		Tab tab1 = new Tab("Table", rootNode);
+		tab1.setClosable(false);
+		Tab tab2 = new Tab("Map", map);
+		tab2.setClosable(false);
+		tabPane.getTabs().addAll(tab1, tab2);
+		
 		//scene
-		Scene scene = new Scene(rootNode);
+		Scene scene = new Scene(tabPane);
 		primaryStage.setMaximized(true);
 		primaryStage.setScene(scene);
 		primaryStage.show();
