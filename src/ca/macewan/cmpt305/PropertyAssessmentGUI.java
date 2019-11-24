@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
@@ -20,13 +21,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
+import javafx.util.converter.IntegerStringConverter;
 //implemented in Milestone 3
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 //java utilities
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -43,8 +45,8 @@ public class PropertyAssessmentGUI extends Application {
 	private TextField accNumField;
 	private TextField addrField;
 	private TextField nbhField;
-	private NumberField lowerValField;
-	private NumberField upperValField;
+	private TextField lowerValField;
+	private TextField upperValField;
 	private ComboBox<String> classComboBox;
 	private VBox vBoxIn;
 	private VBox vBox;
@@ -127,8 +129,18 @@ public class PropertyAssessmentGUI extends Application {
 		labelVal.setFont(new Font("Arial", 12));
 		
 		//currency
-		lowerValField = new NumberField();
-		upperValField = new NumberField();
+		UnaryOperator<Change> intFilter = change -> {
+			String newText = change.getControlNewText();
+			if (newText.matches("[0-9]*")) {
+				return change;
+			}
+			return null;
+		};
+		
+		lowerValField = new TextField();
+		upperValField = new TextField();
+		lowerValField.setTextFormatter(new TextFormatter<Integer> (new IntegerStringConverter(), 0, intFilter));
+		upperValField.setTextFormatter(new TextFormatter<Integer> (new IntegerStringConverter(), 0, intFilter));
 		HBox hBoxCur = new HBox(10);
 		hBoxCur.getChildren().addAll(lowerValField, upperValField);
 		
@@ -249,46 +261,34 @@ public class PropertyAssessmentGUI extends Application {
 			String addr = addrField.getText().strip();
 			String nbh = nbhField.getText().strip().toUpperCase();
 			String res = classComboBox.getValue();
+			int lower = Integer.parseInt(lowerValField.getText());
+			int upper = Integer.parseInt(upperValField.getText());
 			
+			/*TO DO: REPLACE GETASSESSEDVAL MIN CHECK 
+			 * 
+			 * 
+			 * */
 			//assigns predicate properties to the filtered data based on fields and comboboxes
 			filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
 		    p -> Integer.toString(
 		    		  p.getAccountNum()).contains(accNum)
 		           && p.getAddress().toString().contains(addr) 
 		           && p.getNBHName().contains(nbh)
+		           && (lower == 0 ? p.getAssessedVal() >= 0 : p.getAssessedVal() >= lower)
+		           && (upper == 0 ? p.getAssessedVal() >= 0 : p.getAssessedVal() <= upper)
 		           && (res == "" ? p.getAssessedClass().contains(res) : p.getAssessedClass().equals(res)),
 
 		    accNumField.textProperty(),
 		    addrField.textProperty(),
 		    nbhField.textProperty(),
+		    lowerValField.textProperty(),
+		    upperValField.textProperty(),
 		    classComboBox.valueProperty()
 		));
 
 		statistics.clear();
 		statistics.setText(getStatistics(filteredData));
 		}
-	}
-	
-	public class NumberField extends TextField{
-		
-		@Override
-		public void replaceText(int start, int end, String text) {
-			if (validate(text)) {
-				super.replaceSelection(text);
-			}
-		}
-		
-		@Override
-		public void replaceSelection(String text) {
-			if (validate(text)) {
-				super.replaceSelection(text);
-			}
-		}
-		
-		private boolean validate(String text) {
-			return text.matches("[0-9]*");
-		}
-		
 	}
 	
 	//Reset Button handling
@@ -299,8 +299,8 @@ public class PropertyAssessmentGUI extends Application {
 			accNumField.clear();
 			addrField.clear();
 			nbhField.clear();
-			lowerValField.clear();
-			upperValField.clear();
+			lowerValField.setText("0");
+			upperValField.setText("0");
 		}
 	}
 	
