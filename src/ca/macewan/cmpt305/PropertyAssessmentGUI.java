@@ -30,6 +30,7 @@ import javafx.scene.web.WebView;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.io.IOException;
 import java.text.NumberFormat;
 
@@ -263,6 +264,7 @@ public class PropertyAssessmentGUI extends Application {
 			String res = classComboBox.getValue();
 			int lower = Integer.parseInt(lowerValField.getText());
 			int upper = Integer.parseInt(upperValField.getText());
+			int min = Lab2Main.getMin(rawData);
 			
 			/*TO DO: REPLACE GETASSESSEDVAL MIN CHECK 
 			 * 
@@ -274,8 +276,8 @@ public class PropertyAssessmentGUI extends Application {
 		    		  p.getAccountNum()).contains(accNum)
 		           && p.getAddress().toString().contains(addr) 
 		           && p.getNBHName().contains(nbh)
-		           && (lower == 0 ? p.getAssessedVal() >= 0 : p.getAssessedVal() >= lower)
-		           && (upper == 0 ? p.getAssessedVal() >= 0 : p.getAssessedVal() <= upper)
+		           && (lower == 0 ? p.getAssessedVal() >= min : p.getAssessedVal() >= lower)
+		           && (upper == 0 ? p.getAssessedVal() >= min : p.getAssessedVal() <= upper)
 		           && (res == "" ? p.getAssessedClass().contains(res) : p.getAssessedClass().equals(res)),
 
 		    accNumField.textProperty(),
