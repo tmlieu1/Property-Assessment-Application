@@ -22,15 +22,17 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
+
 //implemented in Milestone 3
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 
 //java utilities
 import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
 
@@ -46,11 +48,16 @@ public class PropertyAssessmentGUI extends Application {
 	private TextField accNumField;
 	private TextField addrField;
 	private TextField nbhField;
-	private TextField lowerValField;
-	private TextField upperValField;
 	private ComboBox<String> classComboBox;
 	private VBox vBoxIn;
 	private VBox vBox;
+	
+	//added in milestone 3
+	private TextField lowerValField;
+	private TextField upperValField;
+	private Button button;
+	private FileChooser fileChooser;
+	private File file;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -60,11 +67,20 @@ public class PropertyAssessmentGUI extends Application {
 		//table
 		configureTable();
 		table.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.90));
-
+		
 		//input vBox
 		configureInput();
 		vBoxIn.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.22));
 		vBoxIn.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.90));
+		
+		//file
+		fileChooser = new FileChooser();
+		fileChooser.setInitialDirectory("Property_Assessment_Data_2019.csv");
+		File test = fileChooser.getTitle();
+		button.setOnAction(e ->{
+			file = fileChooser.showOpenDialog(primaryStage);
+			System.out.println(file.getName());
+		});
 		
 		//right vBox
 		configureRight();
@@ -129,6 +145,9 @@ public class PropertyAssessmentGUI extends Application {
 		final Label labelVal = new Label("Assessment Value");
 		labelVal.setFont(new Font("Arial", 12));
 		
+		//
+		button = new Button("Select File");
+		
 		//currency
 		UnaryOperator<Change> intFilter = change -> {
 			String newText = change.getControlNewText();
@@ -179,7 +198,7 @@ public class PropertyAssessmentGUI extends Application {
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
 				"-fx-border-color: lightgray;");
-		vBoxIn.getChildren().addAll(labelIn, labelAcc, accNumField,
+		vBoxIn.getChildren().addAll(button, labelIn, labelAcc, accNumField,
 				labelAddr, addrField, labelNBH, nbhField, labelVal, hBoxCur,
 				labelClass, classComboBox, hBoxBtn, separator, statistics);
 	}
@@ -266,10 +285,6 @@ public class PropertyAssessmentGUI extends Application {
 			int upper = Integer.parseInt(upperValField.getText());
 			int min = Lab2Main.getMin(rawData);
 			
-			/*TO DO: REPLACE GETASSESSEDVAL MIN CHECK 
-			 * 
-			 * 
-			 * */
 			//assigns predicate properties to the filtered data based on fields and comboboxes
 			filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
 		    p -> Integer.toString(
@@ -342,8 +357,7 @@ public class PropertyAssessmentGUI extends Application {
 	
 	//Returns the List of Properties
 	public List<Property> getTableData() {
-		String file = "Property_Assessment_Data_2019.csv";
-		List <Property> propertyValues = readFile(file);
+		List <Property> propertyValues = readFile("Property_Assessment_Data_2019.csv");
 		return propertyValues;
 	}
 }
