@@ -15,7 +15,7 @@ class StatisticsTest {
 	@BeforeEach
 	void testReadFile() throws Exception {
 		//try to read the correct filename
-		correctTestValues = Lab2Main.readFile(correctFile);
+		correctTestValues = FileReader.readFile(correctFile);
 		correctNBHValues = Lab2Main.getNBHData(correctTestValues, "WEBBER GREENS");
 	}
 	

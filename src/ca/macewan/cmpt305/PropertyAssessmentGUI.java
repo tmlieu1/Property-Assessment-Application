@@ -161,7 +161,7 @@ public class PropertyAssessmentGUI extends Application {
 		labelVal.setFont(new Font("Arial", 12));
 		
 		//button and current file label
-		final Label labelFile = new Label("Current File:");
+		final Label labelFile = new Label("Current File");
 		labelFile.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 		labelCurr = new Label(file.getName());
 		labelCurr.setFont(new Font("Arial", 12));
@@ -380,28 +380,9 @@ public class PropertyAssessmentGUI extends Application {
 	}
 	
 	public void populateData(String filename) {
-		rawData = getTableData(filename);
+		rawData = FileReader.getTableData(filename);
 		data = FXCollections.observableArrayList(rawData);
 		filteredData = new FilteredList<Property>(data);
 		sortedData = new SortedList<Property>(filteredData);
-	}
-	
-	
-	//Creates a List of Properties from the file.
-	public List<Property> readFile(String filename){
-		List <Property> pa = new ArrayList<>();
-		try {
-			pa = Lab2Main.readFile(filename);
-			return pa;
-		}
-		catch (IOException e) {
-			return pa;
-		}
-	}
-	
-	//Returns the List of Properties
-	public List<Property> getTableData(String filename) {
-		List <Property> propertyValues = readFile(filename);
-		return propertyValues;
 	}
 }

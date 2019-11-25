@@ -25,7 +25,7 @@ public class Lab2Main{
 			String data = getInput("Property_Assessment_Data_2019.csv", "CSV filename [default: Property_Assessment_Data_2019.csv]: ");
 			try {
 				//fill the propertyValues arraylist with data.
-				List<Property> propertyValues = readFile(data);
+				List<Property> propertyValues = FileReader.readFile(data);
 				Statistics.printStats(propertyValues);
 				//find by account number and display information about it.
 				int accNum = Integer.parseInt(getInput("10006474", "\nFind a property assessment by account number [default: 10006474]: "));
@@ -99,38 +99,5 @@ public class Lab2Main{
 		}
 		Collections.sort(nbhList);
 		return nbhList;
-	}
-	
-    /*	@readFile(String filename)
-     * 	purpose: reads through a file row by row and creating a Property List from the data gathered.
-     * 	parameters: String filename - file to read from.
-     * 	pre: filename is a valid String.
-     * 	returns: List<Property> pa
-     */
-	public static List<Property> readFile(String filename) throws IOException {
-		List<Property> pa = new ArrayList<>();
-		//we begin reading through the file, skip the first line.
-		Scanner file = new Scanner(Paths.get(filename));
-		if (file.hasNextLine()) {
-			file.nextLine();
-		}
-		//iterate through the file, separating by ','
-		//we then add each element of the row to the arrayList index in each iteration
-		while (file.hasNextLine()) {
-			String currentLine = file.nextLine();
-			Scanner tokenizer = new Scanner(currentLine).useDelimiter(",");
-			String [] temp = new String[12];
-			for (int i = 0; i < 12 && tokenizer.hasNext(); i++) {
-				String test = tokenizer.next();
-				temp[i] = test;
-			}
-			//construct address, location, neighbourhood classes and create the property object from them.
-			Address addr = new Address(temp[1], temp[2], temp[3]); 
-			Location loc = new Location(Double.parseDouble(temp[10]), Double.parseDouble(temp[11]));
-			Neighbourhood nbh = new Neighbourhood(temp[6], temp[7], temp[8]);
-			pa.add(new Property(Integer.parseInt(temp[0]), addr, Integer.parseInt(temp[4]), temp[5], nbh, loc));
-		}
-		Collections.sort(pa);
-		return pa;
 	}
 }
