@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class Lab2MainTest {
+class StatisticsTest {
 	private List <Property> correctTestValues;
 	private List <Property> correctNBHValues;
 	
@@ -30,8 +30,8 @@ class Lab2MainTest {
 	
 	@Test
 	void testGetNum() {
-		int numTestValues = Lab2Main.getNum(correctTestValues);
-		int numNBHValues = Lab2Main.getNum(correctNBHValues);
+		int numTestValues = Statistics.getNum(correctTestValues);
+		int numNBHValues = Statistics.getNum(correctNBHValues);
 		
 		//test for correct for full data and neighbourhood data
 		assertEquals(400541, numTestValues);
@@ -48,8 +48,8 @@ class Lab2MainTest {
 	
 	@Test
 	void testGetMin() {
-		int minTestValues = Lab2Main.getMin(correctTestValues);
-		int minNBHValues = Lab2Main.getMin(correctNBHValues);
+		int minTestValues = Statistics.getMin(correctTestValues);
+		int minNBHValues = Statistics.getMin(correctNBHValues);
 		
 		//test for correct for full data and neighbourhood data
 		assertEquals(0, minTestValues);
@@ -66,8 +66,8 @@ class Lab2MainTest {
 	
 	@Test
 	void testGetMax() {
-		int maxTestValues = Lab2Main.getMax(correctTestValues);
-		int maxNBHValues = Lab2Main.getMax(correctNBHValues);
+		int maxTestValues = Statistics.getMax(correctTestValues);
+		int maxNBHValues = Statistics.getMax(correctNBHValues);
 		
 		//test for correct for full data and neighbourhood data
 		assertEquals(1338809500, maxTestValues);
@@ -85,8 +85,8 @@ class Lab2MainTest {
 	@Test
 	void testGetRange() {
 		//test for correct for full data and neighbourhood data
-		long rangeTestValues = Lab2Main.getRange(Lab2Main.getMax(correctTestValues), Lab2Main.getMin(correctTestValues));
-		long rangeNBHValues = Lab2Main.getRange(Lab2Main.getMax(correctNBHValues), Lab2Main.getMin(correctNBHValues));
+		long rangeTestValues = Statistics.getRange(Statistics.getMax(correctTestValues), Statistics.getMin(correctTestValues));
+		long rangeNBHValues = Statistics.getRange(Statistics.getMax(correctNBHValues), Statistics.getMin(correctNBHValues));
 		
 		assertEquals(1338809500, rangeTestValues);
 		assertEquals(38779000, rangeNBHValues);
@@ -102,8 +102,8 @@ class Lab2MainTest {
 	
 	@Test
 	void testGetMean() {
-		long meanTestValues = Lab2Main.getMean(correctTestValues);
-		long meanNBHValues = Lab2Main.getMean(correctNBHValues);
+		long meanTestValues = Statistics.getMean(correctTestValues);
+		long meanNBHValues = Statistics.getMean(correctNBHValues);
 		
 		//test for correct for full data and neighbourhood data
 		assertEquals(464922, meanTestValues);
@@ -120,8 +120,8 @@ class Lab2MainTest {
 	
 	@Test
 	void testGetSD() {
-		long sdTestValues = Lab2Main.getSD(correctTestValues, Lab2Main.getMean(correctTestValues));
-		long sdNBHValues = Lab2Main.getSD(correctNBHValues, Lab2Main.getMean(correctNBHValues));
+		long sdTestValues = Statistics.getSD(correctTestValues, Statistics.getMean(correctTestValues));
+		long sdNBHValues = Statistics.getSD(correctNBHValues, Statistics.getMean(correctNBHValues));
 		
 		//test for correct for full data and neighbourhood data
 		assertEquals(3683363, sdTestValues);	
@@ -138,8 +138,8 @@ class Lab2MainTest {
 	
 	@Test
 	void testGetMedian() {
-		int medianTestValues = Lab2Main.getMedian(correctTestValues);
-		int medianNBHValues = Lab2Main.getMedian(correctNBHValues);
+		int medianTestValues = Statistics.getMedian(correctTestValues);
+		int medianNBHValues = Statistics.getMedian(correctNBHValues);
 		
 		//test for correct for full data and neighbourhood data
 		assertEquals(323000, medianTestValues);

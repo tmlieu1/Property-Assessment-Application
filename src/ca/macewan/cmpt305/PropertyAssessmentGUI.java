@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
@@ -39,11 +40,11 @@ import java.text.NumberFormat;
 public class PropertyAssessmentGUI extends Application {
 	
 	NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-	private List<Property> rawData = getTableData();
-	private TableView<Property> table = new TableView<Property>();
-	private ObservableList<Property> data = FXCollections.observableArrayList(rawData);
-	private FilteredList<Property> filteredData = new FilteredList<Property>(data);
-	private SortedList<Property> sortedData = new SortedList<Property>(filteredData);
+	private List<Property> rawData;
+	private TableView<Property> table;
+	private ObservableList<Property> data;
+	private FilteredList<Property> filteredData;
+	private SortedList<Property> sortedData;
 	private TextArea statistics;
 	private TextField accNumField;
 	private TextField addrField;
@@ -58,12 +59,17 @@ public class PropertyAssessmentGUI extends Application {
 	private Button button;
 	private FileChooser fileChooser;
 	private File file;
+	private Label labelCurr;
 	
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
 	public void start(Stage primaryStage) throws Exception {
+		//populate data
+		file = new File("Property_Assessment_Data_2019.csv");
+		populateData(file.getName());
+		
 		//table
 		configureTable();
 		table.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.90));
@@ -75,11 +81,12 @@ public class PropertyAssessmentGUI extends Application {
 		
 		//file
 		fileChooser = new FileChooser();
-		//fileChooser.setInitialDirectory("Property_Assessment_Data_2019.csv");
-		//File test = 
-		button.setOnAction(e ->{
+		button.setOnAction(e -> {
 			file = fileChooser.showOpenDialog(primaryStage);
-			System.out.println(file.getName());
+			populateData(file.getName());
+			labelCurr.setText(file.getName());
+			reset();
+			search();
 		});
 		
 		//right vBox
@@ -94,6 +101,9 @@ public class PropertyAssessmentGUI extends Application {
 		//BorderPane secondNode
 		BorderPane secondNode = new BorderPane();
 		
+		//BorderPane thirdNode
+		BorderPane thirdNode = new BorderPane();
+		
 		//webview
 		WebView map = new WebView();
 		WebEngine engine = map.getEngine();
@@ -107,7 +117,10 @@ public class PropertyAssessmentGUI extends Application {
 		Tab tab2 = new Tab("Map", map);
 		tab2.setClosable(false);
 		Tab tab3 = new Tab("Comparison", secondNode);
-		tabPane.getTabs().addAll(tab1, tab2);
+		tab3.setClosable(false);
+		Tab tab4 = new Tab("Charts", thirdNode);
+		tab4.setClosable(false);
+		tabPane.getTabs().addAll(tab1, tab2, tab3, tab4);
 		
 		//scene
 		primaryStage.setTitle("Edmonton Property Assessments");
@@ -121,8 +134,7 @@ public class PropertyAssessmentGUI extends Application {
 	private void configureRight() {
 		//vBox
 		final Label label = new Label("Edmonton Property Assessments");
-		label.setStyle("-fx-font-weight: bold");
-		label.setFont(new Font("Arial", 16));
+		label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 		vBox = new VBox(10);
 		vBox.setStyle("-fx-padding: 10;" +
 				"-fx-border-style: solid inside;" +
@@ -136,8 +148,7 @@ public class PropertyAssessmentGUI extends Application {
 	private void configureInput() {
 		//vBox input labels
 		final Label labelIn = new Label("Find Property Assessment");
-		labelIn.setFont(new Font("Arial", 16));
-		labelIn.setStyle("-fx-font-weight: bold");
+		labelIn.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 		final Label labelAcc = new Label("Account Number:");
 		labelAcc.setFont(new Font("Arial", 12));
 		final Label labelAddr = new Label("Address (#suite #house street):");
@@ -149,18 +160,23 @@ public class PropertyAssessmentGUI extends Application {
 		final Label labelVal = new Label("Assessment Value");
 		labelVal.setFont(new Font("Arial", 12));
 		
-		//
+		//button and current file label
+		final Label labelFile = new Label("Current File:");
+		labelFile.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		labelCurr = new Label(file.getName());
+		labelCurr.setFont(new Font("Arial", 12));
 		button = new Button("Select File");
 		
-		//currency
+		//integer filter
 		UnaryOperator<Change> intFilter = change -> {
 			String newText = change.getControlNewText();
-			if (newText.matches("[0-9]*")) {
+			if (newText.matches("^[0-9]*+$|^$")) {
 				return change;
 			}
 			return null;
 		};
 		
+		//currency
 		lowerValField = new TextField();
 		upperValField = new TextField();
 		lowerValField.setTextFormatter(new TextFormatter<Integer> (new IntegerStringConverter(), 0, intFilter));
@@ -180,6 +196,7 @@ public class PropertyAssessmentGUI extends Application {
 		
 		//textfields
 		accNumField = new TextField();
+		accNumField.setTextFormatter(new TextFormatter<Integer> (new IntegerStringConverter(), null, intFilter));
 		addrField = new TextField();
 		nbhField = new TextField();
 		
@@ -192,7 +209,8 @@ public class PropertyAssessmentGUI extends Application {
 		hBoxBtn.getChildren().addAll(searchBtn, resetBtn);
 		
 		//separator and textarea
-		Separator separator = new Separator();
+		Separator sep1 = new Separator();
+		Separator sep2 = new Separator();
 		statistics = new TextArea();
 		statistics.setEditable(false);
 		
@@ -203,13 +221,15 @@ public class PropertyAssessmentGUI extends Application {
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
 				"-fx-border-color: lightgray;");
-		vBoxIn.getChildren().addAll(button, labelIn, labelAcc, accNumField,
-				labelAddr, addrField, labelNBH, nbhField, labelVal, hBoxCur,
-				labelClass, classComboBox, hBoxBtn, separator, statistics);
+		vBoxIn.getChildren().addAll(labelFile, labelCurr, button, sep1, labelIn, labelAcc, 
+				accNumField, labelAddr, addrField, labelNBH, nbhField, labelVal, hBoxCur,
+				labelClass, classComboBox, hBoxBtn, sep2, statistics);
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void configureTable() {
+		table = new TableView<Property>();
+		
 		TableColumn <Property, Integer> accNumCol = new TableColumn<Property, Integer>("Account");
 		accNumCol.prefWidthProperty().bind(table.widthProperty().multiply(0.07));
 		accNumCol.setCellValueFactory(new Callback<CellDataFeatures<Property, Integer>, ObservableValue<Integer>>() {
@@ -278,51 +298,62 @@ public class PropertyAssessmentGUI extends Application {
 		table.getColumns().setAll(accNumCol, addressCol, valCol, classCol, nbhCol, latCol, longCol);	
 	}
 	
+	//search
+	private void search() {
+		String accNum = accNumField.getText().strip();
+		String addr = addrField.getText().strip();
+		String nbh = nbhField.getText().strip().toUpperCase();
+		String res = classComboBox.getValue();
+		int lower = lowerValField.getText() == "" ? 0 : Integer.parseInt(lowerValField.getText());
+		int upper = upperValField.getText() == "" ? 0 : Integer.parseInt(upperValField.getText());
+		int min = Statistics.getMin(rawData);
+		
+		//assigns predicate properties to the filtered data based on fields and comboboxes
+		filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
+	    p -> Integer.toString(
+	    		  p.getAccountNum()).contains(accNum)
+	           && p.getAddress().toString().contains(addr) 
+	           && p.getNBHName().contains(nbh)
+	           && (lower == 0 ? p.getAssessedVal() >= min : p.getAssessedVal() >= lower)
+	           && (upper == 0 ? p.getAssessedVal() >= min : p.getAssessedVal() <= upper)
+	           && (res == "" ? p.getAssessedClass().contains(res) : p.getAssessedClass().equals(res)),
+
+	    accNumField.textProperty(),
+	    addrField.textProperty(),
+	    nbhField.textProperty(),
+	    lowerValField.textProperty(),
+	    upperValField.textProperty(),
+	    classComboBox.valueProperty()
+	));
+
+	statistics.clear();
+	statistics.setText(getStatistics(filteredData));
+	}
+	
 	//Search button handling
 	private class SearchButtonListener implements EventHandler <MouseEvent>{
 		@Override
 		public void handle(MouseEvent event) {
-			String accNum = accNumField.getText().strip();
-			String addr = addrField.getText().strip();
-			String nbh = nbhField.getText().strip().toUpperCase();
-			String res = classComboBox.getValue();
-			int lower = Integer.parseInt(lowerValField.getText());
-			int upper = Integer.parseInt(upperValField.getText());
-			int min = Lab2Main.getMin(rawData);
-			
-			//assigns predicate properties to the filtered data based on fields and comboboxes
-			filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
-		    p -> Integer.toString(
-		    		  p.getAccountNum()).contains(accNum)
-		           && p.getAddress().toString().contains(addr) 
-		           && p.getNBHName().contains(nbh)
-		           && (lower == 0 ? p.getAssessedVal() >= min : p.getAssessedVal() >= lower)
-		           && (upper == 0 ? p.getAssessedVal() >= min : p.getAssessedVal() <= upper)
-		           && (res == "" ? p.getAssessedClass().contains(res) : p.getAssessedClass().equals(res)),
-
-		    accNumField.textProperty(),
-		    addrField.textProperty(),
-		    nbhField.textProperty(),
-		    lowerValField.textProperty(),
-		    upperValField.textProperty(),
-		    classComboBox.valueProperty()
-		));
-
-		statistics.clear();
-		statistics.setText(getStatistics(filteredData));
+			search();
 		}
+	}
+	
+	//Reset
+	private void reset() {
+		classComboBox.valueProperty().set("");
+		accNumField.clear();
+		addrField.clear();
+		nbhField.clear();
+		lowerValField.setText("0");
+		upperValField.setText("0");
 	}
 	
 	//Reset Button handling
 	private class ResetButtonListener implements EventHandler <MouseEvent>{
 		@Override
 		public void handle(MouseEvent event) {
-			classComboBox.valueProperty().set("");
-			accNumField.clear();
-			addrField.clear();
-			nbhField.clear();
-			lowerValField.setText("0");
-			upperValField.setText("0");
+			reset();
+			search();
 		}
 	}
 	
@@ -331,14 +362,14 @@ public class PropertyAssessmentGUI extends Application {
 		if (data.size() == 0) {
 			return "";
 		}
-		int min = Lab2Main.getMin(data);
-		int max = Lab2Main.getMax(data);
-		long mean = Lab2Main.getMean(data);
+		int min = Statistics.getMin(data);
+		int max = Statistics.getMax(data);
+		long mean = Statistics.getMean(data);
 		return "Statistics of Assessed Values\n" + 
-				"\nNumber of Properties: " + Lab2Main.getNum(data) + "\nMin: " + format(min) + 
-				"\nMax: " + format(max) + "\nRange: " + format(Lab2Main.getRange(max, min)) +
-				"\nMean: " + format(mean) + "\nMedian: " + format(Lab2Main.getMedian(data)) + 
-				"\nStandard Deviation: " + format(Lab2Main.getSD(data, mean));
+				"\nNumber of Properties: " + Statistics.getNum(data) + "\nMin: " + format(min) + 
+				"\nMax: " + format(max) + "\nRange: " + format(Statistics.getRange(max, min)) +
+				"\nMean: " + format(mean) + "\nMedian: " + format(Statistics.getMedian(data)) + 
+				"\nStandard Deviation: " + format(Statistics.getSD(data, mean));
 	}
 	
 	//Converts to currencyFormatter, stripping cent values.
@@ -347,6 +378,14 @@ public class PropertyAssessmentGUI extends Application {
 		String cf = currencyFormatter.format(num);
 		return cf;
 	}
+	
+	public void populateData(String filename) {
+		rawData = getTableData(filename);
+		data = FXCollections.observableArrayList(rawData);
+		filteredData = new FilteredList<Property>(data);
+		sortedData = new SortedList<Property>(filteredData);
+	}
+	
 	
 	//Creates a List of Properties from the file.
 	public List<Property> readFile(String filename){
@@ -361,8 +400,8 @@ public class PropertyAssessmentGUI extends Application {
 	}
 	
 	//Returns the List of Properties
-	public List<Property> getTableData() {
-		List <Property> propertyValues = readFile("Property_Assessment_Data_2019.csv");
+	public List<Property> getTableData(String filename) {
+		List <Property> propertyValues = readFile(filename);
 		return propertyValues;
 	}
 }

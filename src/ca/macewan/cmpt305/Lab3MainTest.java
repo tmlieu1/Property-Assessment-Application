@@ -21,8 +21,8 @@ class Lab3MainTest {
 
 	@Test
 	void testGetNum() {
-		int numTestValues = Lab2Main.getNum(correctTestValues);
-		int numResValues = Lab2Main.getNum(correctResValues);
+		int numTestValues = Statistics.getNum(correctTestValues);
+		int numResValues = Statistics.getNum(correctResValues);
 		
 		//test for correct for full data and residential data
 		assertEquals(400541, numTestValues);
@@ -39,8 +39,8 @@ class Lab3MainTest {
 	
 	@Test
 	void testGetMin() {
-		int minTestValues = Lab2Main.getMin(correctTestValues);
-		int minResValues = Lab2Main.getMin(correctResValues);
+		int minTestValues = Statistics.getMin(correctTestValues);
+		int minResValues = Statistics.getMin(correctResValues);
 		
 		//test for correct for full data and residential data
 		assertEquals(0, minTestValues);
@@ -57,8 +57,8 @@ class Lab3MainTest {
 	
 	@Test
 	void testGetMax() {
-		int maxTestValues = Lab2Main.getMax(correctTestValues);
-		int maxResValues = Lab2Main.getMax(correctResValues);
+		int maxTestValues = Statistics.getMax(correctTestValues);
+		int maxResValues = Statistics.getMax(correctResValues);
 		
 		//test for correct for full data and residential data
 		assertEquals(1338809500, maxTestValues);
@@ -76,8 +76,8 @@ class Lab3MainTest {
 	@Test
 	void testGetRange() {
 		//test for correct for full data and residential data
-		long rangeTestValues = Lab2Main.getRange(Lab2Main.getMax(correctTestValues), Lab2Main.getMin(correctTestValues));
-		long rangeResValues = Lab2Main.getRange(Lab2Main.getMax(correctResValues), Lab2Main.getMin(correctResValues));
+		long rangeTestValues = Statistics.getRange(Statistics.getMax(correctTestValues), Statistics.getMin(correctTestValues));
+		long rangeResValues = Statistics.getRange(Statistics.getMax(correctResValues), Statistics.getMin(correctResValues));
 		
 		assertEquals(1338809500, rangeTestValues);
 		assertEquals(42416000, rangeResValues);
@@ -93,8 +93,8 @@ class Lab3MainTest {
 	
 	@Test
 	void testGetMean() {
-		long meanTestValues = Lab2Main.getMean(correctTestValues);
-		long meanResValues = Lab2Main.getMean(correctResValues);
+		long meanTestValues = Statistics.getMean(correctTestValues);
+		long meanResValues = Statistics.getMean(correctResValues);
 		
 		//test for correct for full data and residential data
 		assertEquals(464922, meanTestValues);
@@ -111,8 +111,8 @@ class Lab3MainTest {
 	
 	@Test
 	void testGetSD() {
-		long sdTestValues = Lab2Main.getSD(correctTestValues, Lab2Main.getMean(correctTestValues));
-		long sdResValues = Lab2Main.getSD(correctResValues, Lab2Main.getMean(correctResValues));
+		long sdTestValues = Statistics.getSD(correctTestValues, Statistics.getMean(correctTestValues));
+		long sdResValues = Statistics.getSD(correctResValues, Statistics.getMean(correctResValues));
 		
 		//test for correct for full data and residential data
 		assertEquals(3683363, sdTestValues);	
@@ -129,8 +129,8 @@ class Lab3MainTest {
 	
 	@Test
 	void testGetMedian() {
-		int medianTestValues = Lab2Main.getMedian(correctTestValues);
-		int medianResValues = Lab2Main.getMedian(correctResValues);
+		int medianTestValues = Statistics.getMedian(correctTestValues);
+		int medianResValues = Statistics.getMedian(correctResValues);
 		
 		//test for correct for full data and residential data
 		assertEquals(323000, medianTestValues);
