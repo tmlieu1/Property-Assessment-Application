@@ -5,4 +5,6 @@ module edmontonAssessment {
 	requires javafx.controls;
 	requires javafx.base;
 	requires javafx.web;
+	requires java.base;
+	requires java.json;
 }
