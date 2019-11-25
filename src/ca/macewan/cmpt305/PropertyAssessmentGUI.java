@@ -75,8 +75,8 @@ public class PropertyAssessmentGUI extends Application {
 		
 		//file
 		fileChooser = new FileChooser();
-		fileChooser.setInitialDirectory("Property_Assessment_Data_2019.csv");
-		File test = fileChooser.getTitle();
+		//fileChooser.setInitialDirectory("Property_Assessment_Data_2019.csv");
+		//File test = 
 		button.setOnAction(e ->{
 			file = fileChooser.showOpenDialog(primaryStage);
 			System.out.println(file.getName());
@@ -86,10 +86,13 @@ public class PropertyAssessmentGUI extends Application {
 		configureRight();
 		vBox.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.78));
 		
-		//border pane
+		//BorderPane rootNode
 		BorderPane rootNode = new BorderPane();
 		rootNode.setLeft(vBoxIn);
 		rootNode.setCenter(vBox);
+		
+		//BorderPane secondNode
+		BorderPane secondNode = new BorderPane();
 		
 		//webview
 		WebView map = new WebView();
@@ -103,6 +106,7 @@ public class PropertyAssessmentGUI extends Application {
 		tab1.setClosable(false);
 		Tab tab2 = new Tab("Map", map);
 		tab2.setClosable(false);
+		Tab tab3 = new Tab("Comparison", secondNode);
 		tabPane.getTabs().addAll(tab1, tab2);
 		
 		//scene
@@ -166,6 +170,7 @@ public class PropertyAssessmentGUI extends Application {
 		
 		//vBox input comboBox
 		ObservableList<String> options = FXCollections.observableArrayList(
+				"Farmland",
 				"Residential",
 				"Non Residential",
 				"Other Residential"
