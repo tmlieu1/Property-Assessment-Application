@@ -21,10 +21,20 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+//implemented in Milestone 3
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+
+
 //java utilities
 import java.util.List;
 import java.util.ArrayList;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.NumberFormat;
 
 public class PropertyAssessmentGUI extends Application {
@@ -39,10 +49,11 @@ public class PropertyAssessmentGUI extends Application {
 	private TextField accNumField;
 	private TextField addrField;
 	private TextField nbhField;
-	private Separator separator;
-	private Button searchBtn;
-	private Button resetBtn;
+	private NumberField lowerValField;
+	private NumberField upperValField;
 	private ComboBox<String> classComboBox;
+	private VBox vBoxIn;
+	private VBox vBox;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -52,7 +63,75 @@ public class PropertyAssessmentGUI extends Application {
 		//table
 		configureTable();
 		table.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.90));
+
+		//input vBox
+		configureInput();
+		vBoxIn.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.22));
+		vBoxIn.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.90));
 		
+		//right vBox
+		configureRight();
+		vBox.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.78));
+		
+		//border pane
+		BorderPane rootNode = new BorderPane();
+		rootNode.setLeft(vBoxIn);
+		rootNode.setCenter(vBox);
+		
+		//webview
+		WebView map = new WebView();
+		WebEngine engine = map.getEngine();
+		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json");
+		URLConnection con = url.openConnection();
+		InputStream is = con.getInputStream();
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String line = null;
+		while (((line = br.readLine()) !=null)) {
+			System.out.println(line);
+		}
+		//System.out.println(url.toString());
+		//List <Property> propertyVals = readFile(url.toExternalForm());
+		//System.out.println(propertyVals);
+		String googlemaps = this.getClass().getResource("/ca/macewan/cmpt305/website.html").toExternalForm();
+		engine.load(url.toString());
+		//engine.load(googlemaps);
+		// charts
+		
+		//tabs
+		TabPane tabPane = new TabPane();
+		Tab tab1 = new Tab("Table", rootNode);
+		tab1.setClosable(false);
+		Tab tab2 = new Tab("Map", map);
+		tab2.setClosable(false);
+		//Tab tab3 = new Tab("Chart", chart);
+		tabPane.getTabs().addAll(tab1, tab2);
+				//, tab3);
+		
+		//scene
+		primaryStage.setTitle("Edmonton Property Assessments");
+		Scene scene = new Scene(tabPane);
+		primaryStage.setMaximized(true);
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	//configures the look of the table vbox
+	private void configureRight() {
+		//vBox
+		final Label label = new Label("Edmonton Property Assessments");
+		label.setStyle("-fx-font-weight: bold");
+		label.setFont(new Font("Arial", 16));
+		vBox = new VBox(10);
+		vBox.setStyle("-fx-padding: 10;" +
+				"-fx-border-style: solid inside;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-insets: 10, 10, 10, 10;" +
+				"-fx-border-color: lightgray;");
+		vBox.getChildren().addAll(label, table);
+	}
+	
+	//configures the look of the input vbox
+	private void configureInput() {
 		//vBox input labels
 		final Label labelIn = new Label("Find Property Assessment");
 		labelIn.setFont(new Font("Arial", 16));
@@ -65,6 +144,14 @@ public class PropertyAssessmentGUI extends Application {
 		labelNBH.setFont(new Font("Arial", 12));
 		final Label labelClass = new Label("Assessment Class:");
 		labelNBH.setFont(new Font("Arial", 12));
+		final Label labelVal = new Label("Assessment Value");
+		labelVal.setFont(new Font("Arial", 12));
+		
+		//currency
+		lowerValField = new NumberField();
+		upperValField = new NumberField();
+		HBox hBoxCur = new HBox(10);
+		hBoxCur.getChildren().addAll(lowerValField, upperValField);
 		
 		//vBox input comboBox
 		ObservableList<String> options = FXCollections.observableArrayList(
@@ -82,59 +169,27 @@ public class PropertyAssessmentGUI extends Application {
 		
 		//hBox btn
 		HBox hBoxBtn = new HBox(10);
-		searchBtn = new Button("Search");
-		resetBtn = new Button("Reset");
+		Button searchBtn = new Button("Search");
+		Button resetBtn = new Button("Reset");
 		searchBtn.setOnMouseClicked(new SearchButtonListener());
-		resetBtn.setOnMouseClicked(event ->{
-			classComboBox.valueProperty().set("");
-			accNumField.clear();
-			addrField.clear();
-			nbhField.clear();
-		});
+		resetBtn.setOnMouseClicked(new ResetButtonListener());
 		hBoxBtn.getChildren().addAll(searchBtn, resetBtn);
 		
 		//separator and textarea
-		separator = new Separator();
+		Separator separator = new Separator();
 		statistics = new TextArea();
 		statistics.setEditable(false);
 		
-		//vBox input
-		VBox vBoxIn = new VBox(10);
+		//vBoxIn
+		vBoxIn = new VBox(10);
 		vBoxIn.setStyle("-fx-padding: 10;" +
 				"-fx-border-style: solid inside;" +
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
 				"-fx-border-color: lightgray;");
 		vBoxIn.getChildren().addAll(labelIn, labelAcc, accNumField,
-				labelAddr, addrField, labelNBH, nbhField, 
+				labelAddr, addrField, labelNBH, nbhField, labelVal, hBoxCur,
 				labelClass, classComboBox, hBoxBtn, separator, statistics);
-		vBoxIn.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.22));
-		vBoxIn.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.90));
-		
-		//vBox
-		primaryStage.setTitle("Edmonton Property Assessments");
-		final Label label = new Label("Edmonton Property Assessments");
-		label.setStyle("-fx-font-weight: bold");
-		label.setFont(new Font("Arial", 16));
-		VBox vBox = new VBox(10);
-		vBox.setStyle("-fx-padding: 10;" +
-				"-fx-border-style: solid inside;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: lightgray;");
-		vBox.getChildren().addAll(label, table);
-		vBox.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.78));
-		
-		//border pane
-		BorderPane rootNode = new BorderPane();
-		rootNode.setLeft(vBoxIn);
-		rootNode.setCenter(vBox);
-		
-		//scene
-		Scene scene = new Scene(rootNode);
-		primaryStage.setMaximized(true);
-		primaryStage.setScene(scene);
-		primaryStage.show();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -207,6 +262,7 @@ public class PropertyAssessmentGUI extends Application {
 		table.getColumns().setAll(accNumCol, addressCol, valCol, classCol, nbhCol, latCol, longCol);	
 	}
 	
+	//Search button handling
 	private class SearchButtonListener implements EventHandler <MouseEvent>{
 		@Override
 		public void handle(MouseEvent event) {
@@ -215,11 +271,12 @@ public class PropertyAssessmentGUI extends Application {
 			String nbh = nbhField.getText().strip().toUpperCase();
 			String res = classComboBox.getValue();
 			
+			//assigns predicate properties to the filtered data based on fields and comboboxes
 			filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
 		    p -> Integer.toString(
 		    		  p.getAccountNum()).contains(accNum)
 		           && p.getAddress().toString().contains(addr) 
-		           && p.getNBHName().contains(nbh)	
+		           && p.getNBHName().contains(nbh)
 		           && (res == "" ? p.getAssessedClass().contains(res) : p.getAssessedClass().equals(res)),
 
 		    accNumField.textProperty(),
@@ -233,6 +290,42 @@ public class PropertyAssessmentGUI extends Application {
 		}
 	}
 	
+	public class NumberField extends TextField{
+		
+		@Override
+		public void replaceText(int start, int end, String text) {
+			if (validate(text)) {
+				super.replaceSelection(text);
+			}
+		}
+		
+		@Override
+		public void replaceSelection(String text) {
+			if (validate(text)) {
+				super.replaceSelection(text);
+			}
+		}
+		
+		private boolean validate(String text) {
+			return text.matches("[0-9]*");
+		}
+		
+	}
+	
+	//Reset Button handling
+	private class ResetButtonListener implements EventHandler <MouseEvent>{
+		@Override
+		public void handle(MouseEvent event) {
+			classComboBox.valueProperty().set("");
+			accNumField.clear();
+			addrField.clear();
+			nbhField.clear();
+			lowerValField.clear();
+			upperValField.clear();
+		}
+	}
+	
+	//Creates the text to be shown in the statistics field
 	public String getStatistics(FilteredList<Property> data) {
 		if (data.size() == 0) {
 			return "";
@@ -247,11 +340,14 @@ public class PropertyAssessmentGUI extends Application {
 				"\nStandard Deviation: " + format(Lab2Main.getSD(data, mean));
 	}
 	
+	//Converts to currencyFormatter, stripping cent values.
 	public String format(long num) {
+		currencyFormatter.setMaximumFractionDigits(0);
 		String cf = currencyFormatter.format(num);
 		return cf;
 	}
 	
+	//Creates a List of Properties from the file.
 	public List<Property> readFile(String filename){
 		List <Property> pa = new ArrayList<>();
 		try {
@@ -263,6 +359,7 @@ public class PropertyAssessmentGUI extends Application {
 		}
 	}
 	
+	//Returns the List of Properties
 	public List<Property> getTableData() {
 		String file = "Property_Assessment_Data_2019.csv";
 		List <Property> propertyValues = readFile(file);
