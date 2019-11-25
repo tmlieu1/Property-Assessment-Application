@@ -1,3 +1,4 @@
+
 package ca.macewan.cmpt305;
 
 //javafx imports
@@ -13,7 +14,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
@@ -21,19 +21,25 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.converter.IntegerStringConverter;
 
 //implemented in Milestone 3
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONString;
 
 //java utilities
 import java.util.List;
-import java.util.function.UnaryOperator;
+import java.util.Scanner;
 import java.util.ArrayList;
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.NumberFormat;
 
 public class PropertyAssessmentGUI extends Application {
@@ -48,16 +54,11 @@ public class PropertyAssessmentGUI extends Application {
 	private TextField accNumField;
 	private TextField addrField;
 	private TextField nbhField;
+	private NumberField lowerValField;
+	private NumberField upperValField;
 	private ComboBox<String> classComboBox;
 	private VBox vBoxIn;
 	private VBox vBox;
-	
-	//added in milestone 3
-	private TextField lowerValField;
-	private TextField upperValField;
-	private Button button;
-	private FileChooser fileChooser;
-	private File file;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -67,38 +68,33 @@ public class PropertyAssessmentGUI extends Application {
 		//table
 		configureTable();
 		table.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.90));
-		
+
 		//input vBox
 		configureInput();
 		vBoxIn.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.22));
 		vBoxIn.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.90));
 		
-		//file
-		fileChooser = new FileChooser();
-		//fileChooser.setInitialDirectory("Property_Assessment_Data_2019.csv");
-		//File test = 
-		button.setOnAction(e ->{
-			file = fileChooser.showOpenDialog(primaryStage);
-			System.out.println(file.getName());
-		});
-		
 		//right vBox
 		configureRight();
 		vBox.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.78));
 		
-		//BorderPane rootNode
+		//border pane
 		BorderPane rootNode = new BorderPane();
 		rootNode.setLeft(vBoxIn);
 		rootNode.setCenter(vBox);
 		
-		//BorderPane secondNode
-		BorderPane secondNode = new BorderPane();
-		
 		//webview
 		WebView map = new WebView();
 		WebEngine engine = map.getEngine();
-		String url = this.getClass().getResource("/ca/macewan/cmpt305/website.html").toExternalForm();
-		engine.load(url);
+		String googlemaps = this.getClass().getResource("/ca/macewan/cmpt305/website.html").toExternalForm();
+		engine.load(googlemaps);
+		
+		//API
+		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json");
+		URLConnection con = url.openConnection();
+		InputStream is = con.getInputStream();
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		List<Property> vals = getExtractedAPIData(br);
 		
 		//tabs
 		TabPane tabPane = new TabPane();
@@ -106,8 +102,9 @@ public class PropertyAssessmentGUI extends Application {
 		tab1.setClosable(false);
 		Tab tab2 = new Tab("Map", map);
 		tab2.setClosable(false);
-		Tab tab3 = new Tab("Comparison", secondNode);
+		//Tab tab3 = new Tab("Chart", chart);
 		tabPane.getTabs().addAll(tab1, tab2);
+				//, tab3);
 		
 		//scene
 		primaryStage.setTitle("Edmonton Property Assessments");
@@ -149,28 +146,14 @@ public class PropertyAssessmentGUI extends Application {
 		final Label labelVal = new Label("Assessment Value");
 		labelVal.setFont(new Font("Arial", 12));
 		
-		//
-		button = new Button("Select File");
-		
 		//currency
-		UnaryOperator<Change> intFilter = change -> {
-			String newText = change.getControlNewText();
-			if (newText.matches("[0-9]*")) {
-				return change;
-			}
-			return null;
-		};
-		
-		lowerValField = new TextField();
-		upperValField = new TextField();
-		lowerValField.setTextFormatter(new TextFormatter<Integer> (new IntegerStringConverter(), 0, intFilter));
-		upperValField.setTextFormatter(new TextFormatter<Integer> (new IntegerStringConverter(), 0, intFilter));
+		lowerValField = new NumberField();
+		upperValField = new NumberField();
 		HBox hBoxCur = new HBox(10);
 		hBoxCur.getChildren().addAll(lowerValField, upperValField);
 		
 		//vBox input comboBox
 		ObservableList<String> options = FXCollections.observableArrayList(
-				"Farmland",
 				"Residential",
 				"Non Residential",
 				"Other Residential"
@@ -203,7 +186,7 @@ public class PropertyAssessmentGUI extends Application {
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
 				"-fx-border-color: lightgray;");
-		vBoxIn.getChildren().addAll(button, labelIn, labelAcc, accNumField,
+		vBoxIn.getChildren().addAll(labelIn, labelAcc, accNumField,
 				labelAddr, addrField, labelNBH, nbhField, labelVal, hBoxCur,
 				labelClass, classComboBox, hBoxBtn, separator, statistics);
 	}
@@ -286,9 +269,6 @@ public class PropertyAssessmentGUI extends Application {
 			String addr = addrField.getText().strip();
 			String nbh = nbhField.getText().strip().toUpperCase();
 			String res = classComboBox.getValue();
-			int lower = Integer.parseInt(lowerValField.getText());
-			int upper = Integer.parseInt(upperValField.getText());
-			int min = Lab2Main.getMin(rawData);
 			
 			//assigns predicate properties to the filtered data based on fields and comboboxes
 			filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
@@ -296,21 +276,39 @@ public class PropertyAssessmentGUI extends Application {
 		    		  p.getAccountNum()).contains(accNum)
 		           && p.getAddress().toString().contains(addr) 
 		           && p.getNBHName().contains(nbh)
-		           && (lower == 0 ? p.getAssessedVal() >= min : p.getAssessedVal() >= lower)
-		           && (upper == 0 ? p.getAssessedVal() >= min : p.getAssessedVal() <= upper)
 		           && (res == "" ? p.getAssessedClass().contains(res) : p.getAssessedClass().equals(res)),
 
 		    accNumField.textProperty(),
 		    addrField.textProperty(),
 		    nbhField.textProperty(),
-		    lowerValField.textProperty(),
-		    upperValField.textProperty(),
 		    classComboBox.valueProperty()
 		));
 
 		statistics.clear();
 		statistics.setText(getStatistics(filteredData));
 		}
+	}
+	
+	public class NumberField extends TextField{
+		
+		@Override
+		public void replaceText(int start, int end, String text) {
+			if (validate(text)) {
+				super.replaceSelection(text);
+			}
+		}
+		
+		@Override
+		public void replaceSelection(String text) {
+			if (validate(text)) {
+				super.replaceSelection(text);
+			}
+		}
+		
+		private boolean validate(String text) {
+			return text.matches("[0-9]*");
+		}
+		
 	}
 	
 	//Reset Button handling
@@ -321,8 +319,8 @@ public class PropertyAssessmentGUI extends Application {
 			accNumField.clear();
 			addrField.clear();
 			nbhField.clear();
-			lowerValField.setText("0");
-			upperValField.setText("0");
+			lowerValField.clear();
+			upperValField.clear();
 		}
 	}
 	
@@ -362,7 +360,59 @@ public class PropertyAssessmentGUI extends Application {
 	
 	//Returns the List of Properties
 	public List<Property> getTableData() {
-		List <Property> propertyValues = readFile("Property_Assessment_Data_2019.csv");
+		String file = "Property_Assessment_Data_2019.csv";
+		List <Property> propertyValues = readFile(file);
 		return propertyValues;
+	}
+	
+	public List<Property> getExtractedAPIData(BufferedReader data) throws IOException, JSONException {
+		List<Property> propVals = new ArrayList<Property>();
+		String line = null;
+		StringBuilder sb = new StringBuilder();
+		int cnt = 0;
+		while ((line = data.readLine()) != null) {
+			sb.append(line + '\n');
+			cnt ++;
+			//System.out.println(line);
+		}
+		JSONArray jsonArray = new JSONArray(sb.toString());
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject json = jsonArray.getJSONObject(i);
+			Integer account = json.getInt("account_number");
+			String suite = null;
+			try {
+				suite = json.getString("suite");
+			} catch (Exception e) {
+				suite = "";
+			}
+			String house_num;			
+			try {
+				house_num = json.getString("house_number");
+			}catch(Exception e) {
+				house_num = "";
+			}
+			String street_name;
+			try {
+				street_name = json.getString("street_name");
+			} catch(Exception e) {
+				street_name = "";
+			}
+			Integer ass_val = json.getInt("total_asmt");
+			String ass_clas = json.getString("tax_class");
+			String neigh_id = json.getString("neighbourhood_id");
+			String neigh = json.getString("neighbourhood");
+			String ward = json.getString("ward");
+			String gar = json.getString("garage");
+			Double latit = json.getDouble("latitude");
+			Double longit = json.getDouble("longitude");
+			Address addr = new Address(suite,house_num,street_name);
+			Neighbourhood nbh = new Neighbourhood(neigh_id, neigh, ward);
+			Location loc = new Location(latit,longit);
+			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
+			propVals.add(prop);
+			System.out.println(prop);
+		}
+		System.out.println(jsonArray.length());
+		return propVals;
 	}
 }
