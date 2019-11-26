@@ -38,6 +38,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.NumberFormat;
@@ -59,6 +60,8 @@ public class PropertyAssessmentGUI extends Application {
 	private ComboBox<String> classComboBox;
 	private VBox vBoxIn;
 	private VBox vBox;
+	
+	public BufferedReader br;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -90,10 +93,10 @@ public class PropertyAssessmentGUI extends Application {
 		engine.load(googlemaps);
 		
 		//API
-		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json");
-		URLConnection con = url.openConnection();
-		InputStream is = con.getInputStream();
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+//		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json");
+//		URLConnection con = url.openConnection();
+//		InputStream is = con.getInputStream();
+		br = getPropertyAPI("https://data.edmonton.ca/resource/q7d6-ambg.json");
 		List<Property> vals = getExtractedAPIData(br);
 		
 		//tabs
@@ -112,6 +115,13 @@ public class PropertyAssessmentGUI extends Application {
 		primaryStage.setMaximized(true);
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+	
+	public BufferedReader getPropertyAPI(String link) throws IOException {
+		URL url =  new URL(link);
+		URLConnection con = url.openConnection();
+		InputStream is = con.getInputStream();
+		return new BufferedReader(new InputStreamReader(is));
 	}
 	
 	//configures the look of the table vbox
