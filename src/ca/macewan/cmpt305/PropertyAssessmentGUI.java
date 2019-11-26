@@ -217,6 +217,7 @@ public class PropertyAssessmentGUI extends Application {
 		Separator sep2 = new Separator();
 		statistics = new TextArea();
 		statistics.setEditable(false);
+		statistics.setText(getStatistics(filteredData));
 		
 		//vBoxIn
 		vBoxIn = new VBox(10);
@@ -297,7 +298,7 @@ public class PropertyAssessmentGUI extends Application {
 		
 		table.setItems(sortedData);
 		sortedData.comparatorProperty().bind(table.comparatorProperty());
-		table.getColumns().setAll(accNumCol, addressCol, valCol, classCol, nbhCol, latCol, longCol);	
+		table.getColumns().setAll(accNumCol, addressCol, valCol, classCol, nbhCol, latCol, longCol);
 	}
 	
 	//search
@@ -381,6 +382,7 @@ public class PropertyAssessmentGUI extends Application {
 		return cf;
 	}
 	
+	//populates the data and wraps it.
 	public void populateData(String filename) {
 		rawData = FileReader.getTableData(filename);
 		data = FXCollections.observableArrayList(rawData);
