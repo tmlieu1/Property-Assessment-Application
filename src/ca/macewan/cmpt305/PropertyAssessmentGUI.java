@@ -90,7 +90,7 @@ public class PropertyAssessmentGUI extends Application {
 		engine.load(googlemaps);
 		
 		//API
-		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json");
+		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401116");
 		URLConnection con = url.openConnection();
 		InputStream is = con.getInputStream();
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -399,9 +399,24 @@ public class PropertyAssessmentGUI extends Application {
 			}
 			Integer ass_val = json.getInt("total_asmt");
 			String ass_clas = json.getString("tax_class");
-			String neigh_id = json.getString("neighbourhood_id");
-			String neigh = json.getString("neighbourhood");
-			String ward = json.getString("ward");
+			String neigh_id;
+			try {
+				neigh_id = json.getString("neighbourhood_id");
+			} catch (Exception e) {
+				neigh_id = "";
+			}
+			String neigh;
+			try {
+				neigh = json.getString("neighbourhood");
+			}catch (Exception e) {
+				neigh = "";
+			}
+			String ward;
+			try {
+				ward = json.getString("ward");
+			} catch(Exception e) {
+				ward = "";
+			}
 			String gar = json.getString("garage");
 			Double latit = json.getDouble("latitude");
 			Double longit = json.getDouble("longitude");
