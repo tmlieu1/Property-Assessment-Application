@@ -28,6 +28,8 @@ import javafx.util.converter.IntegerStringConverter;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 
 //java utilities
 import java.util.List;
@@ -41,7 +43,7 @@ public class PropertyAssessmentGUI extends Application {
 	
 	NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 	private List<Property> rawData;
-	private TableView<Property> table;
+	private TableView<Property> table = new TableView<Property>();;
 	private ObservableList<Property> data;
 	private FilteredList<Property> filteredData;
 	private SortedList<Property> sortedData;
@@ -85,6 +87,7 @@ public class PropertyAssessmentGUI extends Application {
 			file = fileChooser.showOpenDialog(primaryStage);
 			populateData(file.getName());
 			labelCurr.setText(file.getName());
+			configureTable();
 			reset();
 			search();
 		});
@@ -112,14 +115,11 @@ public class PropertyAssessmentGUI extends Application {
 		
 		//tabs
 		TabPane tabPane = new TabPane();
+		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		Tab tab1 = new Tab("Table", rootNode);
-		tab1.setClosable(false);
 		Tab tab2 = new Tab("Map", map);
-		tab2.setClosable(false);
 		Tab tab3 = new Tab("Comparison", secondNode);
-		tab3.setClosable(false);
 		Tab tab4 = new Tab("Charts", thirdNode);
-		tab4.setClosable(false);
 		tabPane.getTabs().addAll(tab1, tab2, tab3, tab4);
 		
 		//scene
@@ -228,8 +228,6 @@ public class PropertyAssessmentGUI extends Application {
 	
 	@SuppressWarnings("unchecked")
 	private void configureTable() {
-		table = new TableView<Property>();
-		
 		TableColumn <Property, Integer> accNumCol = new TableColumn<Property, Integer>("Account");
 		accNumCol.prefWidthProperty().bind(table.widthProperty().multiply(0.07));
 		accNumCol.setCellValueFactory(new Callback<CellDataFeatures<Property, Integer>, ObservableValue<Integer>>() {
