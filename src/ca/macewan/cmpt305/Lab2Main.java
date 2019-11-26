@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
+
 public class Lab2Main{
 	
 	//main method
@@ -43,6 +44,7 @@ public class Lab2Main{
 		}
 	}
 	
+	
     /*	@displayStats(List<Property> propertyValues)
      * 	purpose: gathers statistical data from methods in the class, given a PropertyAssessment array, and prints the output.
      * 	parameters: List <PropertyAssessment> - list in which displayStats gathers data.
@@ -64,6 +66,7 @@ public class Lab2Main{
 				"\nmean: " + mean + "\nstandard deviation: " + getSD(propertyValues, mean) + 
 				"\nmedian: " + getMedian(propertyValues));
 	}
+	
 	
     /*	@getInput(String defaultCase, String inputMessage)
      * 	purpose: gathers input from the user, returning a default String if none is entered.
