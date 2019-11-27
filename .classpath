@@ -16,12 +16,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX_12">
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSON">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/json">
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX_12">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
