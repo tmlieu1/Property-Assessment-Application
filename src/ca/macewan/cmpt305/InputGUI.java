@@ -160,7 +160,7 @@ public class InputGUI {
 	private class SearchButtonListener implements EventHandler <MouseEvent>{
 		@Override
 		public void handle(MouseEvent event) {
-			search();
+			search(rawData, filteredData);
 		}
 	}
 	
