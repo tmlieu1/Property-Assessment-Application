@@ -1,6 +1,6 @@
 
 module edmontonAssessment {
-	opens src.ca.macewan.cmpt305 to javafx.graphics;
+	opens ca.macewan.cmpt305 to javafx.graphics;
 	requires org.junit.jupiter.api;
 	requires javafx.graphics;
 	requires javafx.controls;

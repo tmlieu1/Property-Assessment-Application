@@ -1,5 +1,5 @@
 
-package src.ca.macewan.cmpt305;
+package ca.macewan.cmpt305;
 
 //javafx imports
 import javafx.application.Application;
