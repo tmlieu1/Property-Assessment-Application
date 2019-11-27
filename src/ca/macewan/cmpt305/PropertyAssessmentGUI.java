@@ -90,7 +90,7 @@ public class PropertyAssessmentGUI extends Application {
 		engine.load(googlemaps);
 		
 		//API
-		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401116");
+		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117");
 		URLConnection con = url.openConnection();
 		InputStream is = con.getInputStream();
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -102,9 +102,7 @@ public class PropertyAssessmentGUI extends Application {
 		tab1.setClosable(false);
 		Tab tab2 = new Tab("Map", map);
 		tab2.setClosable(false);
-		//Tab tab3 = new Tab("Chart", chart);
 		tabPane.getTabs().addAll(tab1, tab2);
-				//, tab3);
 		
 		//scene
 		primaryStage.setTitle("Edmonton Property Assessments");
@@ -369,11 +367,8 @@ public class PropertyAssessmentGUI extends Application {
 		List<Property> propVals = new ArrayList<Property>();
 		String line = null;
 		StringBuilder sb = new StringBuilder();
-		int cnt = 0;
 		while ((line = data.readLine()) != null) {
 			sb.append(line + '\n');
-			cnt ++;
-			//System.out.println(line);
 		}
 		JSONArray jsonArray = new JSONArray(sb.toString());
 		for (int i = 0; i < jsonArray.length(); i++) {
@@ -425,7 +420,6 @@ public class PropertyAssessmentGUI extends Application {
 			Location loc = new Location(latit,longit);
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
 			propVals.add(prop);
-			System.out.println(prop);
 		}
 		System.out.println(jsonArray.length());
 		return propVals;
