@@ -29,7 +29,13 @@ import javafx.util.converter.IntegerStringConverter;
 
 public class InputGUI {
 	
-	private TextArea statistics;
+	//data
+	private FilteredList <Property> filteredData;
+	private List <Property> rawData;
+	private ObservableList<Property> data;
+	private SortedList <Property> sortedData;
+	
+	//inputs
 	private TextField accNumField;
 	private TextField addrField;
 	private TextField nbhField;
@@ -44,7 +50,12 @@ public class InputGUI {
 	private File file;
 	private Label labelCurr;
 	
-	public VBox configureInput(FilteredList<Property> filteredData, List<Property> rawData) {
+	public InputGUI(FilteredList<Property> filteredData, List <Property> rawData) {
+		this.filteredData = filteredData;
+		this.rawData = rawData;
+	}
+	
+	public VBox configureInput() {
 		//vBox input labels
 		final Label labelIn = new Label("Find Property Assessment");
 		labelIn.setFont(Font.font("Arial", FontWeight.BOLD, 16));
@@ -107,6 +118,16 @@ public class InputGUI {
 		resetBtn.setOnMouseClicked(new ResetButtonListener());
 		hBoxBtn.getChildren().addAll(searchBtn, resetBtn);
 		
+		//file
+		fileChooser = new FileChooser();
+		button.setOnAction(e -> {
+			file = fileChooser.showOpenDialog(null);
+			populateData(file.getName());
+			labelCurr.setText(file.getName());
+			reset();
+			search();
+		});
+		
 		//separator and textarea
 		Separator sep1 = new Separator();
 		
@@ -125,7 +146,7 @@ public class InputGUI {
 	}
 	
 	//search
-	private void search(List<Property> rawData, FilteredList<Property> filteredData) {
+	private void search() {
 		String accNum = accNumField.getText().strip();
 		String addr = addrField.getText().strip();
 		String nbh = nbhField.getText().strip().toUpperCase();
@@ -160,7 +181,7 @@ public class InputGUI {
 	private class SearchButtonListener implements EventHandler <MouseEvent>{
 		@Override
 		public void handle(MouseEvent event) {
-			search(rawData, filteredData);
+			search();
 		}
 	}
 	
@@ -182,5 +203,11 @@ public class InputGUI {
 			search();
 		}
 	}
-
+	
+	public void populateData(String filename) {
+		rawData = FileReader.getTableData(filename);
+		data = FXCollections.observableArrayList(rawData);
+		filteredData = new FilteredList<Property>(data);
+		sortedData = new SortedList<Property>(filteredData);
+	}
 }

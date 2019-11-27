@@ -107,7 +107,7 @@ public class PropertyAssessmentGUI extends Application {
 		
 		//BorderPane secondNode
 		SecondNodeGUI secNode = new SecondNodeGUI();
-		BorderPane secondNode = secNode.Pane(filteredData);
+		BorderPane secondNode = secNode.Pane(filteredData, rawData);
 		
 		//BorderPane thirdNode
 		BorderPane thirdNode = new BorderPane();

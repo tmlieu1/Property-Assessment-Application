@@ -1,5 +1,7 @@
 package ca.macewan.cmpt305;
 
+import java.util.List;
+
 //javafx imports
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -32,9 +34,7 @@ public class SecondNodeGUI {
 	
 	private ComboBox<String> chartComboBox;
 	
-	public BorderPane Pane(FilteredList<Property> data) {
-		
-		
+	public BorderPane Pane(FilteredList<Property> filteredData, List<Property> rawData) {
 		
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
@@ -54,20 +54,18 @@ public class SecondNodeGUI {
 		Button button = new Button("Confirm");
 		
 		//vbox
-		VBox vBoxIn = new VBox(10);
-		vBoxIn.setStyle("-fx-padding: 10;" +
-				"-fx-border-style: solid inside;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: lightgray;");
 		VBox vBoxCharts = new VBox(10);
 		vBoxCharts.setStyle("-fx-padding: 10;" +
 				"-fx-border-style: solid inside;" +
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
 				"-fx-border-color: lightgray;");
-		vBoxIn.getChildren().addAll(labelChoice, chartComboBox, button);
 		vBoxCharts.getChildren().add(labelChart);
+		
+		//BorderPane secondNode
+		InputGUI input = new InputGUI(filteredData, rawData);
+		VBox vBoxIn = input.configureInput();
+		vBoxIn.getChildren().addAll(labelChoice, chartComboBox, button);
 		
 		//borderpane
 		BorderPane secNode = new BorderPane();
