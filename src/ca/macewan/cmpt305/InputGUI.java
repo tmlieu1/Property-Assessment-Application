@@ -57,7 +57,7 @@ public class InputGUI {
 	private Button button;
 	private FileChooser fileChooser;
 	private Label labelCurr;
-	TableView <Property> table;
+	private TableView <Property> table;
 	
 	public InputGUI(FilteredList<Property> filteredData, List <Property> rawData, File file) {
 		this.filteredData = filteredData;
@@ -160,8 +160,7 @@ public class InputGUI {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public TableView <Property>configureTable() {
-		TableView <Property> table = new TableView<Property>();
+	public TableView <Property> configureTable() {
 		TableColumn <Property, Integer> accNumCol = new TableColumn<Property, Integer>("Account");
 		accNumCol.prefWidthProperty().bind(table.widthProperty().multiply(0.07));
 		accNumCol.setCellValueFactory(new Callback<CellDataFeatures<Property, Integer>, ObservableValue<Integer>>() {
