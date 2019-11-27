@@ -36,17 +36,13 @@ public class PropertyAssessmentGUI extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		//populate data
 		file = new File("Property_Assessment_Data_2019.csv");
-		populateData(file.getName());
-		
-		//Input node
-		InputGUI input = new InputGUI(filteredData, rawData, file);
 		
 		//BorderPane rootNode
-		RootNodeGUI tableNode = new RootNodeGUI(filteredData, rawData, sortedData, file, input);
+		RootNodeGUI tableNode = new RootNodeGUI(filteredData, rawData, file);
 		BorderPane rootNode = tableNode.Pane();
 		
 		//BorderPane secondNode
-		SecondNodeGUI chartNode = new SecondNodeGUI(filteredData, rawData, file, input);
+		SecondNodeGUI chartNode = new SecondNodeGUI(filteredData, rawData, file);
 		BorderPane secondNode = chartNode.Pane();
 		
 		//BorderPane thirdNode
@@ -73,13 +69,5 @@ public class PropertyAssessmentGUI extends Application {
 		primaryStage.setMaximized(true);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-	}
-	
-	//populates the data and wraps it.
-	public void populateData(String filename) {
-		rawData = FileReader.getTableData(filename);
-		data = FXCollections.observableArrayList(rawData);
-		filteredData = new FilteredList<Property>(data);
-		sortedData = new SortedList<Property>(filteredData);
 	}
 }

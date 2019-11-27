@@ -219,7 +219,7 @@ public class Property{
 
 
 //PROPERTY ASSESSMENT GUI
-/*
+
 package ca.macewan.cmpt305;
 
 //javafx imports
@@ -604,4 +604,3 @@ public class PropertyAssessmentGUI extends Application {
 		sortedData = new SortedList<Property>(filteredData);
 	}
 }
-*/

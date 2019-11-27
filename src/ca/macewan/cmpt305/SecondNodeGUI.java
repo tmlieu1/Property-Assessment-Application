@@ -21,10 +21,8 @@ public class SecondNodeGUI {
 	private FilteredList <Property> filteredData;
 	private List <Property> rawData;
 	private File file;
-	private InputGUI input;
 	
-	public SecondNodeGUI(FilteredList<Property> filteredData, List<Property> rawData, 
-			File file, InputGUI input) {
+	public SecondNodeGUI(FilteredList<Property> filteredData, List<Property> rawData, File file) {
 		this.filteredData = filteredData;
 		this.rawData = rawData;
 		this.file = file;
@@ -59,6 +57,7 @@ public class SecondNodeGUI {
 		vBoxCharts.getChildren().add(labelChart);
 		
 		//BorderPane secondNode
+		InputGUI input = new InputGUI(filteredData, rawData, file);
 		VBox vBoxIn = input.configureInput();
 		vBoxIn.getChildren().addAll(labelChoice, chartComboBox, button);
 		
