@@ -14,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -34,6 +33,7 @@ public class InputGUI {
 	private List <Property> rawData;
 	private ObservableList<Property> data;
 	private SortedList <Property> sortedData;
+	private File file;
 	
 	//inputs
 	private TextField accNumField;
@@ -43,16 +43,18 @@ public class InputGUI {
 	private VBox vBoxIn;
 	
 	//added in milestone 3
+	private TextArea statistics;
 	private TextField lowerValField;
 	private TextField upperValField;
 	private Button button;
 	private FileChooser fileChooser;
-	private File file;
 	private Label labelCurr;
 	
-	public InputGUI(FilteredList<Property> filteredData, List <Property> rawData) {
+	public InputGUI(FilteredList<Property> filteredData, List <Property> rawData, File file) {
 		this.filteredData = filteredData;
 		this.rawData = rawData;
+		this.file = file;
+		this.statistics = new TextArea();
 	}
 	
 	public VBox configureInput() {
@@ -145,6 +147,27 @@ public class InputGUI {
 		return vBoxIn;
 	}
 	
+	public TextArea configureStats() {
+		statistics.setEditable(false);
+		statistics.setText(getStatistics(filteredData));
+		return statistics;
+	}
+	
+	//Creates the text to be shown in the statistics field
+	public String getStatistics(FilteredList<Property> data) {
+		if (data.size() == 0) {
+			return "";
+		}
+		int min = Statistics.getMin(data);
+		int max = Statistics.getMax(data);
+		long mean = Statistics.getMean(data);
+		return "Statistics of Assessed Values\n" + 
+				"\nNumber of Properties: " + Statistics.getNum(data) + "\nMin: " + CurrencyFormatter.format(min) + 
+				"\nMax: " + CurrencyFormatter.format(max) + "\nRange: " + CurrencyFormatter.format(Statistics.getRange(max, min)) +
+				"\nMean: " + CurrencyFormatter.format(mean) + "\nMedian: " + CurrencyFormatter.format(Statistics.getMedian(data)) + 
+				"\nStandard Deviation: " + CurrencyFormatter.format(Statistics.getSD(data, mean));
+	}
+	
 	//search
 	private void search() {
 		String accNum = accNumField.getText().strip();
@@ -173,8 +196,8 @@ public class InputGUI {
 	    classComboBox.valueProperty()
 	));
 
-	//statistics.clear();
-	//statistics.setText(getStatistics(filteredData));
+	statistics.clear();
+	statistics.setText(getStatistics(filteredData));
 	}
 	
 	//Search button handling

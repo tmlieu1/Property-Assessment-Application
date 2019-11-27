@@ -1,40 +1,36 @@
 package ca.macewan.cmpt305;
 
+import java.io.File;
 import java.util.List;
 
 //javafx imports
-import javafx.application.Application;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.TextFormatter.Change;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
-import javafx.util.Callback;
-import javafx.util.converter.IntegerStringConverter;
-
 
 /* Add constructor for the chart gui
  * 
  * */
 public class SecondNodeGUI {
 	
-	private ComboBox<String> chartComboBox;
+	private FilteredList <Property> filteredData;
+	private List <Property> rawData;
+	private File file;
+	private InputGUI input;
 	
-	public BorderPane Pane(FilteredList<Property> filteredData, List<Property> rawData) {
+	public SecondNodeGUI(FilteredList<Property> filteredData, List<Property> rawData, 
+			File file, InputGUI input) {
+		this.filteredData = filteredData;
+		this.rawData = rawData;
+		this.file = file;
+	}
+	
+	public BorderPane Pane() {
 		
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
@@ -63,7 +59,6 @@ public class SecondNodeGUI {
 		vBoxCharts.getChildren().add(labelChart);
 		
 		//BorderPane secondNode
-		InputGUI input = new InputGUI(filteredData, rawData);
 		VBox vBoxIn = input.configureInput();
 		vBoxIn.getChildren().addAll(labelChoice, chartComboBox, button);
 		
