@@ -28,16 +28,54 @@ import javafx.util.converter.IntegerStringConverter;
 /* Add constructor for the chart gui
  * 
  * */
-public class SecondNodeGUI extends Application{
+public class SecondNodeGUI {
 	
-	private VBox vBoxIn;
-	private VBox vBoxCharts;
+	private ComboBox<String> chartComboBox;
 	
-	/* Potential duplicated code?
-	 * 
-	 * 
-	 * */
-	public void start(Stage secondaryStage) throws Exception{
+	public BorderPane Pane(FilteredList<Property> data) {
 		
+		
+		
+		//labels
+		final Label labelChoice = new Label("Chart Selection");
+		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		final Label labelChart = new Label("Charts");
+		labelChart.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		
+		//comboBox and button
+		ObservableList<String> options = FXCollections.observableArrayList(
+				"Chart 1",
+				"Chart 2",
+				"Chart 3",
+				"Chart 4"
+				);
+		ComboBox<String>chartComboBox = new ComboBox<String>(options);
+		chartComboBox.setValue("");
+		Button button = new Button("Confirm");
+		
+		//vbox
+		VBox vBoxIn = new VBox(10);
+		vBoxIn.setStyle("-fx-padding: 10;" +
+				"-fx-border-style: solid inside;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-insets: 10, 10, 10, 10;" +
+				"-fx-border-color: lightgray;");
+		VBox vBoxCharts = new VBox(10);
+		vBoxCharts.setStyle("-fx-padding: 10;" +
+				"-fx-border-style: solid inside;" +
+				"-fx-border-width: 1;" +
+				"-fx-border-insets: 10, 10, 10, 10;" +
+				"-fx-border-color: lightgray;");
+		vBoxIn.getChildren().addAll(labelChoice, chartComboBox, button);
+		vBoxCharts.getChildren().add(labelChart);
+		
+		//borderpane
+		BorderPane secNode = new BorderPane();
+		vBoxIn.prefWidthProperty().bind(secNode.widthProperty().multiply(0.22));
+		vBoxCharts.prefWidthProperty().bind(secNode.maxWidthProperty().multiply(0.78));
+		secNode.setLeft(vBoxIn);
+		secNode.setCenter(vBoxCharts);
+		
+		return secNode;
 	}
 }

@@ -88,7 +88,7 @@ public class PropertyAssessmentGUI extends Application {
 		//file
 		fileChooser = new FileChooser();
 		button.setOnAction(e -> {
-			file = fileChooser.showOpenDialog(primaryStage);
+			file = fileChooser.showOpenDialog(null);
 			populateData(file.getName());
 			labelCurr.setText(file.getName());
 			configureTable();
@@ -106,7 +106,8 @@ public class PropertyAssessmentGUI extends Application {
 		rootNode.setCenter(vBox);
 		
 		//BorderPane secondNode
-		BorderPane secondNode = new BorderPane();
+		SecondNodeGUI secNode = new SecondNodeGUI();
+		BorderPane secondNode = secNode.Pane(filteredData);
 		
 		//BorderPane thirdNode
 		BorderPane thirdNode = new BorderPane();
@@ -122,8 +123,8 @@ public class PropertyAssessmentGUI extends Application {
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		Tab tab1 = new Tab("Table", rootNode);
 		Tab tab2 = new Tab("Map", map);
-		Tab tab3 = new Tab("Comparison", secondNode);
-		Tab tab4 = new Tab("Charts", thirdNode);
+		Tab tab3 = new Tab("Charts", secondNode);
+		Tab tab4 = new Tab("Comparison", thirdNode);
 		tabPane.getTabs().addAll(tab1, tab2, tab3, tab4);
 		
 		//scene
