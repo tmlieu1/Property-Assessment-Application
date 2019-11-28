@@ -2,10 +2,7 @@ package ca.macewan.cmpt305;
 
 //javafx imports
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -24,9 +21,7 @@ public class PropertyAssessmentGUI extends Application {
 	
 	NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 	private List<Property> rawData;
-	private ObservableList<Property> data;
 	private FilteredList<Property> filteredData;
-	private SortedList<Property> sortedData;
 	private File file;
 	
 	public static void main(String[] args) {

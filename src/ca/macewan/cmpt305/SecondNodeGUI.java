@@ -13,8 +13,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-/* Add constructor for the chart gui
- * 
+/**
+ * Represents the chart node for the controller GUI
  * */
 public class SecondNodeGUI {
 	
@@ -22,14 +22,23 @@ public class SecondNodeGUI {
 	private List <Property> rawData;
 	private File file;
 	
+	/**
+	 * Initializes the data for the class
+	 * @param filteredData
+	 * @param rawData
+	 * @param file
+	 * */
 	public SecondNodeGUI(FilteredList<Property> filteredData, List<Property> rawData, File file) {
 		this.filteredData = filteredData;
 		this.rawData = rawData;
 		this.file = file;
 	}
 	
+	/**
+	 * Constructs the BorderPane and returns it.
+	 * @return
+	 * */
 	public BorderPane Pane() {
-		
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
 		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 16));
@@ -47,7 +56,7 @@ public class SecondNodeGUI {
 		chartComboBox.setValue("");
 		Button button = new Button("Confirm");
 		
-		//vbox
+		//vbox for the charts
 		VBox vBoxCharts = new VBox(10);
 		vBoxCharts.setStyle("-fx-padding: 10;" +
 				"-fx-border-style: solid inside;" +
@@ -56,12 +65,12 @@ public class SecondNodeGUI {
 				"-fx-border-color: lightgray;");
 		vBoxCharts.getChildren().add(labelChart);
 		
-		//BorderPane secondNode
+		//configures the input vbox
 		InputGUI input = new InputGUI(filteredData, rawData, file);
 		VBox vBoxIn = input.configureInput();
 		vBoxIn.getChildren().addAll(labelChoice, chartComboBox, button);
 		
-		//borderpane
+		//configures the borderpane
 		BorderPane secNode = new BorderPane();
 		vBoxIn.prefWidthProperty().bind(secNode.widthProperty().multiply(0.22));
 		vBoxCharts.prefWidthProperty().bind(secNode.maxWidthProperty().multiply(0.78));
