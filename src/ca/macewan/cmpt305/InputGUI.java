@@ -48,17 +48,23 @@ public class InputGUI {
 	private TextField addrField;
 	private TextField nbhField;
 	private ComboBox<String> classComboBox;
-	private VBox vBoxIn;
-	
-	//added in milestone 3
-	private TextArea statistics;
 	private TextField lowerValField;
 	private TextField upperValField;
+	
+	//displays
+	private VBox vBoxIn;
+	private TextArea statistics;
 	private Button button;
 	private FileChooser fileChooser;
 	private Label labelCurr;
 	private TableView <Property> table;
 	
+	/**
+	 * Initializes the data for the class.
+	 * @param filteredData
+	 * @param rawData
+	 * @param file
+	 * */
 	public InputGUI(FilteredList<Property> filteredData, List <Property> rawData, File file) {
 		this.filteredData = filteredData;
 		this.rawData = rawData;
@@ -68,6 +74,10 @@ public class InputGUI {
 		populateData(file.getName());
 	}
 	
+	/**
+	 * Configures the input VBox and returns it.
+	 * @return
+	 * */
 	public VBox configureInput() {
 		//vBox input labels
 		final Label labelIn = new Label("Find Property Assessment");
@@ -99,7 +109,7 @@ public class InputGUI {
 			return null;
 		};
 		
-		//currency
+		//currency textfields
 		lowerValField = new TextField();
 		upperValField = new TextField();
 		lowerValField.setTextFormatter(new TextFormatter<Integer> (new IntegerStringConverter(), 0, intFilter));
@@ -117,7 +127,7 @@ public class InputGUI {
 		classComboBox = new ComboBox<String>(options);
 		classComboBox.setValue("");
 		
-		//textfields
+		//property textfields
 		accNumField = new TextField();
 		accNumField.setTextFormatter(new TextFormatter<Integer> (new IntegerStringConverter(), null, intFilter));
 		addrField = new TextField();
@@ -131,21 +141,21 @@ public class InputGUI {
 		resetBtn.setOnMouseClicked(new ResetButtonListener());
 		hBoxBtn.getChildren().addAll(searchBtn, resetBtn);
 		
-		//file
+		//filechooser
 		fileChooser = new FileChooser();
 		button.setOnAction(e -> {
 			file = fileChooser.showOpenDialog(null);
 			populateData(file.getName());
 			labelCurr.setText(file.getName());
-			configureTable();
+			updateTable();
 			reset();
 			search();
 		});
 		
-		//separator and textarea
+		//separator
 		Separator sep1 = new Separator();
 		
-		//vBoxIn
+		//vBoxIn configuration
 		vBoxIn = new VBox(10);
 		vBoxIn.setStyle("-fx-padding: 10;" +
 				"-fx-border-style: solid inside;" +
@@ -159,6 +169,10 @@ public class InputGUI {
 		return vBoxIn;
 	}
 	
+	/**
+	 * populates and updates the columns of the table in the class and returns it as a table.
+	 * @return
+	 * */
 	@SuppressWarnings("unchecked")
 	public TableView <Property> configureTable() {
 		TableColumn <Property, Integer> accNumCol = new TableColumn<Property, Integer>("Account");
@@ -223,20 +237,33 @@ public class InputGUI {
 	            return new SimpleDoubleProperty(p.getValue().getLocation().getLongitude()).asObject();                
 	        }
 		}); 
-		
-		table.setItems(sortedData);
-		sortedData.comparatorProperty().bind(table.comparatorProperty());
 		table.getColumns().setAll(accNumCol, addressCol, valCol, classCol, nbhCol, latCol, longCol);
+		updateTable();
 		return table;
 	}
 	
+	/**
+	 * updates the table based on sorted data.
+	 * */
+	private void updateTable() {
+		table.setItems(sortedData);
+		sortedData.comparatorProperty().bind(table.comparatorProperty());
+	}
+	
+	/**
+	 * configures the statistics textarea and returns it
+	 * @return
+	 * */
 	public TextArea configureStats() {
 		statistics.setEditable(false);
 		statistics.setText(getStatistics(filteredData));
 		return statistics;
 	}
 	
-	//Creates the text to be shown in the statistics field
+	/**
+	 * creates the text to be shown in the statistics field and returns it as a String
+	 * @return
+	 * */
 	public String getStatistics(FilteredList<Property> data) {
 		if (data.size() == 0) {
 			return "";
@@ -252,7 +279,11 @@ public class InputGUI {
 	}
 	
 	//search
+	/**
+	 * search function helper for the searchbuttonlistener
+	 * */
 	private void search() {
+		//initialize the textfields into data types.
 		String accNum = accNumField.getText().strip();
 		String addr = addrField.getText().strip();
 		String nbh = nbhField.getText().strip().toUpperCase();
@@ -270,7 +301,6 @@ public class InputGUI {
 	           && (lower == 0 ? p.getAssessedVal() >= min : p.getAssessedVal() >= lower)
 	           && (upper == 0 ? p.getAssessedVal() >= min : p.getAssessedVal() <= upper)
 	           && (res == "" ? p.getAssessedClass().contains(res) : p.getAssessedClass().equals(res)),
-
 	    accNumField.textProperty(),
 	    addrField.textProperty(),
 	    nbhField.textProperty(),
@@ -278,12 +308,14 @@ public class InputGUI {
 	    upperValField.textProperty(),
 	    classComboBox.valueProperty()
 	));
-
+	//update the statistics class	
 	statistics.clear();
 	statistics.setText(getStatistics(filteredData));
 	}
 	
-	//Search button handling
+	/**
+	 * search button listener utilizing the search function
+	 * */
 	private class SearchButtonListener implements EventHandler <MouseEvent>{
 		@Override
 		public void handle(MouseEvent event) {
@@ -291,8 +323,11 @@ public class InputGUI {
 		}
 	}
 	
-	//Reset
+	/**
+	 * reset helper function for the resetbuttonlistener
+	 * */
 	private void reset() {
+		//clears all of the textfields and the combobox
 		classComboBox.valueProperty().set("");
 		accNumField.clear();
 		addrField.clear();
@@ -301,7 +336,9 @@ public class InputGUI {
 		upperValField.setText("0");
 	}
 	
-	//Reset Button handling
+	/**
+	 * reset button listener utilizing the reset function
+	 * */
 	private class ResetButtonListener implements EventHandler <MouseEvent>{
 		@Override
 		public void handle(MouseEvent event) {
@@ -310,6 +347,9 @@ public class InputGUI {
 		}
 	}
 	
+	/**
+	 * populates the data of the class using a given filename.
+	 * */
 	public void populateData(String filename) {
 		rawData = FileReader.getTableData(filename);
 		data = FXCollections.observableArrayList(rawData);
