@@ -14,6 +14,7 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 
 //java utilities
 import java.util.List;
+import java.io.BufferedReader;
 import java.io.File;
 import java.text.NumberFormat;
 
@@ -23,6 +24,7 @@ public class PropertyAssessmentGUI extends Application {
 	private List<Property> rawData;
 	private FilteredList<Property> filteredData;
 	private File file;
+	private ApiEdmonton API;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -30,6 +32,8 @@ public class PropertyAssessmentGUI extends Application {
 	
 	public void start(Stage primaryStage) throws Exception {
 		//populate data
+		//API.getUrl();
+		//rawData = API.getExtractedAPIData(API.getbr());
 		file = new File("Property_Assessment_Data_2019.csv");
 		
 		//BorderPane rootNode

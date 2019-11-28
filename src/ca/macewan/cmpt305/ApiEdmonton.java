@@ -13,15 +13,20 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 public class ApiEdmonton {
+	private BufferedReader br;
 	
-	public BufferedReader getUrl() throws IOException{
+	public void getUrl() throws IOException{
 		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117");
 		URLConnection con = url.openConnection();
 		InputStream is = con.getInputStream();
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		return br;
+		this.br = br;
 	}
 	
+	public BufferedReader getbr() {
+		return this.br;
+		
+	}
 	public List<Property> getExtractedAPIData(BufferedReader data) throws IOException, JSONException {
 		List<Property> propVals = new ArrayList<Property>();
 		String line = null;
