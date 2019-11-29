@@ -34,6 +34,8 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
 
+import com.google.gson.*;
+
 public class InputGUI {
 	
 	//data
@@ -58,6 +60,7 @@ public class InputGUI {
 	private FileChooser fileChooser;
 	private Label labelCurr;
 	private TableView <Property> table;
+	private Gson fileConverter = new Gson();
 	
 	public InputGUI(FilteredList<Property> filteredData, List <Property> rawData, File file) {
 		this.filteredData = filteredData;
