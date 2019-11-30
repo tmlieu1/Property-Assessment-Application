@@ -1,7 +1,9 @@
 package ca.macewan.cmpt305;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import javafx.beans.binding.Bindings;
@@ -37,6 +39,7 @@ import javafx.util.converter.IntegerStringConverter;
 public class InputGUI {
 	
 	//data
+	private Map<String, Integer> map;
 	private FilteredList <Property> filteredData;
 	private List <Property> rawData;
 	private ObservableList<Property> data;
@@ -73,11 +76,10 @@ public class InputGUI {
 		table = new TableView<Property>();
 		populateData(file.getName());
 	}
-	
-	/**
-	 * Configures the input VBox and returns it.
-	 * @return
-	 * */
+	public FilteredList<Property> getFiltered() {
+		return this.filteredData;
+	}
+
 	public VBox configureInput() {
 		//vBox input labels
 		final Label labelIn = new Label("Find Property Assessment");

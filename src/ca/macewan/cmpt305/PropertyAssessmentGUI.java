@@ -24,7 +24,7 @@ public class PropertyAssessmentGUI extends Application {
 	private List<Property> rawData;
 	private FilteredList<Property> filteredData;
 	private File file;
-	private ApiEdmonton API;
+	//private ApiEdmonton API;
 	
 	public static void main(String[] args) {
 		launch(args);

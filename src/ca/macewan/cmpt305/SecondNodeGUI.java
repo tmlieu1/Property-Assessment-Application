@@ -2,6 +2,7 @@ package ca.macewan.cmpt305;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 //javafx imports
 import javafx.collections.FXCollections;
@@ -69,6 +70,13 @@ public class SecondNodeGUI {
 		InputGUI input = new InputGUI(filteredData, rawData, file);
 		VBox vBoxIn = input.configureInput();
 		vBoxIn.getChildren().addAll(labelChoice, chartComboBox, button);
+		ChartBuilder chartData= new ChartBuilder(input.getFiltered());
+		Map<String,Integer> map = chartData.createMapAssClass();
+		Map<String,Integer> map1 = chartData.createMapNeigh();
+		Map<String,Integer> mape2 = chartData.createMapWard();
+		System.out.println(map);
+		System.out.println(map1);
+		System.out.println(mape2);
 		
 		//configures the borderpane
 		BorderPane secNode = new BorderPane();
