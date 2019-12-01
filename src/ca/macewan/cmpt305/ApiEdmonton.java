@@ -3,6 +3,7 @@ package ca.macewan.cmpt305;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -15,25 +16,32 @@ import java.io.IOException;
 public class ApiEdmonton {
 	private BufferedReader br;
 	
-	public void getUrl() throws IOException{
-		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117");
-		URLConnection con = url.openConnection();
-		InputStream is = con.getInputStream();
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		this.br = br;
+	public ApiEdmonton(){
+		URL url;
+		try {
+			url = new URL("https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117");
+			URLConnection con = url.openConnection();
+			InputStream is = con.getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			this.br = br;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public BufferedReader getbr() {
 		return this.br;
-		
 	}
+	
 	public List<Property> getExtractedAPIData(BufferedReader data) throws IOException, JSONException {
 		List<Property> propVals = new ArrayList<Property>();
 		String line = null;
 		StringBuilder sb = new StringBuilder();
+		System.out.println("1: API");
 		while ((line = data.readLine()) != null) {
 			sb.append(line + '\n');
 		}
+		System.out.println("2: API");
 		JSONArray jsonArray = new JSONArray(sb.toString());
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject json = jsonArray.getJSONObject(i);
