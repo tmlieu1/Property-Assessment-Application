@@ -1,7 +1,8 @@
 package ca.macewan.cmpt305;
 
 //javafx imports
-import javafx.application.Application;
+//import javafx.application.Application;
+import javafx.application.*;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;

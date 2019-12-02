@@ -89,7 +89,10 @@ public class InputGUI {
 	public FilteredList<Property> getFiltered() {
 		return this.filteredData;
 	}
-
+	/**
+	 * Configures the input VBox and returns it.
+	 * @return
+	 * */
 	public VBox configureInput() {
 		//vBox input labels
 		final Label labelIn = new Label("Find Property Assessment");
