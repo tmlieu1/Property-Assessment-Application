@@ -18,17 +18,30 @@ public class ApiEdmonton {
 	
 	public ApiEdmonton() {
 		System.out.println("0: API");
-		URL url;
+		String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117"; 
 		try {
-			url = new URL("https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117");
-			URLConnection con = url.openConnection();
-			InputStream is = con.getInputStream();
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			BufferedReader br = getBR(urlString);
 			extractAPIData(br);
 			System.out.println("0v: API");
-		} catch (IOException | JSONException e) {
+		} catch (Exception e) {
 			System.out.println("0x: API");
 			e.printStackTrace();
+		}
+	}
+	
+	public BufferedReader getBR(String urlString) throws Exception{
+		BufferedReader br = null;
+		try {	
+			URL url = new URL(urlString);
+			URLConnection con = url.openConnection();
+			InputStream is = con.getInputStream();
+			br = new BufferedReader(new InputStreamReader(is));		
+			return br;
+		}
+		finally {
+			if (br != null) {
+				br.close();
+			}
 		}
 	}
 	
@@ -50,10 +63,11 @@ public class ApiEdmonton {
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject json = jsonArray.getJSONObject(i);
 			Integer account = json.getInt("account_number");
-			String suite = null;
+			String suite;
 			try {
 				suite = json.getString("suite");
-			} catch (Exception e) {
+			}
+			catch(Exception e) {
 				suite = "";
 			}
 			String house_num;			
@@ -97,6 +111,7 @@ public class ApiEdmonton {
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
 			propVals.add(prop);
 		}
-		System.out.println(jsonArray.length());
 	}
 }
+
+
