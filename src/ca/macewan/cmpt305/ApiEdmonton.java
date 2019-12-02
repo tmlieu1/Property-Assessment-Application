@@ -14,34 +14,38 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 public class ApiEdmonton {
-	private BufferedReader br;
+	private List<Property> propVals;
 	
-	public ApiEdmonton(){
+	public ApiEdmonton() {
+		System.out.println("0: API");
 		URL url;
 		try {
 			url = new URL("https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117");
 			URLConnection con = url.openConnection();
 			InputStream is = con.getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			this.br = br;
-		} catch (IOException e) {
+			extractAPIData(br);
+			System.out.println("0v: API");
+		} catch (IOException | JSONException e) {
+			System.out.println("0x: API");
 			e.printStackTrace();
 		}
 	}
 	
-	public BufferedReader getbr() {
-		return this.br;
+	public List<Property> getAPIData(){
+		return propVals;
 	}
 	
-	public List<Property> getExtractedAPIData(BufferedReader data) throws IOException, JSONException {
-		List<Property> propVals = new ArrayList<Property>();
+	public void extractAPIData(BufferedReader data) throws IOException, JSONException {
+		System.out.println("2: API");
+		propVals = new ArrayList<Property>();
 		String line = null;
 		StringBuilder sb = new StringBuilder();
-		System.out.println("1: API");
+		System.out.println("3: API");
 		while ((line = data.readLine()) != null) {
 			sb.append(line + '\n');
 		}
-		System.out.println("2: API");
+		System.out.println("4: API");
 		JSONArray jsonArray = new JSONArray(sb.toString());
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject json = jsonArray.getJSONObject(i);
@@ -94,6 +98,5 @@ public class ApiEdmonton {
 			propVals.add(prop);
 		}
 		System.out.println(jsonArray.length());
-		return propVals;
 	}
 }

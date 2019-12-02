@@ -6,11 +6,13 @@ import javafx.collections.transformation.FilteredList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.image.Image;
 
 //java utilities
 import java.util.List;
@@ -24,7 +26,6 @@ public class PropertyAssessmentGUI extends Application {
 	private List<Property> rawData;
 	private FilteredList<Property> filteredData;
 	private File file;
-	private ApiEdmonton API;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -63,7 +64,8 @@ public class PropertyAssessmentGUI extends Application {
 		
 		//scene
 		primaryStage.setTitle("Edmonton Property Assessments");
-		Scene scene = new Scene(tabPane);
+		primaryStage.getIcons().add(new Image("file:edmonton-logo.png"));
+		Scene scene = new Scene(tabPane, Color.SLATEGRAY);
 		primaryStage.setMaximized(true);
 		primaryStage.setScene(scene);
 		primaryStage.show();

@@ -1,5 +1,6 @@
 package ca.macewan.cmpt305;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -81,7 +82,9 @@ public class InputGUI {
 		table = new TableView<Property>();
 		rawFileData(file.getName());
 		populateData();
+		API = new ApiEdmonton();
 	}
+	
 	public FilteredList<Property> getFiltered() {
 		return this.filteredData;
 	}
@@ -167,7 +170,7 @@ public class InputGUI {
 			System.out.println("Test");
 			try {
 				rawJSONData();
-			} catch (IOException | JSONException e1) {
+			} catch (IOException | JSONException | NullPointerException e1) {
 				e1.printStackTrace();
 			}
 			populateData();
@@ -381,8 +384,9 @@ public class InputGUI {
 		rawData = FileReader.getTableData(filename);
 	}
 	
-	public void rawJSONData() throws IOException, JSONException {
-		rawData = API.getExtractedAPIData(API.getbr());
+	public void rawJSONData() throws IOException, JSONException{
+		System.out.println("-1: API");
+		rawData = API.getAPIData();
 	}
 	
 	/**
