@@ -18,7 +18,9 @@ public class Neighbourhood {
 	public String getNBHName() {
 		return nbhName;
 	}
-	
+	public String getNBHWard() {
+		return nbhWard;
+	}
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Neighbourhood))
 			return false;

@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -22,6 +23,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONString;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.image.Image;
 
 //java utilities
 import java.util.List;
@@ -43,24 +47,25 @@ public class PropertyAssessmentGUI extends Application {
 	private List<Property> rawData;
 	private FilteredList<Property> filteredData;
 	private File file;
-	private ApiEdmonton API;
+	private ApiEdmonton YEG;
 	
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
 	public void start(Stage primaryStage) throws Exception {
+		//fetch API data
+		YEG = new ApiEdmonton();
+		
 		//populate data
-		//API.getUrl();
-		//rawData = API.getExtractedAPIData(API.getbr());
 		file = new File("Property_Assessment_Data_2019.csv");
 		
 		//BorderPane rootNode
-		RootNodeGUI tableNode = new RootNodeGUI(filteredData, rawData, file);
+		RootNodeGUI tableNode = new RootNodeGUI(filteredData, rawData, file, YEG);
 		BorderPane rootNode = tableNode.Pane();
 		
 		//BorderPane secondNode
-		SecondNodeGUI chartNode = new SecondNodeGUI(filteredData, rawData, file);
+		SecondNodeGUI chartNode = new SecondNodeGUI(filteredData, rawData, file, YEG);
 		BorderPane secondNode = chartNode.Pane();
 		
 		//BorderPane thirdNode
@@ -90,7 +95,8 @@ public class PropertyAssessmentGUI extends Application {
 		
 		//scene
 		primaryStage.setTitle("Edmonton Property Assessments");
-		Scene scene = new Scene(tabPane);
+		primaryStage.getIcons().add(new Image("file:edmonton-logo.png"));
+		Scene scene = new Scene(tabPane, Color.SLATEGRAY);
 		primaryStage.setMaximized(true);
 		primaryStage.setScene(scene);
 		primaryStage.show();

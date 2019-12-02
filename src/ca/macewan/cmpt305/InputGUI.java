@@ -1,8 +1,15 @@
 package ca.macewan.cmpt305;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.UnaryOperator;
+
+import org.json.JSONException;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -39,11 +46,13 @@ import com.google.gson.*;
 public class InputGUI {
 	
 	//data
+	private Map<String, Integer> map;
 	private FilteredList <Property> filteredData;
 	private List <Property> rawData;
 	private ObservableList<Property> data;
 	private SortedList <Property> sortedData;
 	private File file;
+	private ApiEdmonton API;
 	
 	//inputs
 	private TextField accNumField;
@@ -57,6 +66,7 @@ public class InputGUI {
 	private VBox vBoxIn;
 	private TextArea statistics;
 	private Button button;
+	private Button buttonJSON;
 	private FileChooser fileChooser;
 	private Label labelCurr;
 	private TableView <Property> table;
@@ -68,19 +78,21 @@ public class InputGUI {
 	 * @param rawData
 	 * @param file
 	 * */
-	public InputGUI(FilteredList<Property> filteredData, List <Property> rawData, File file) {
+	public InputGUI(FilteredList<Property> filteredData, List <Property> rawData, File file, ApiEdmonton API) {
 		this.filteredData = filteredData;
 		this.rawData = rawData;
 		this.file = file;
 		this.statistics = new TextArea();
+		this.API = API;
 		table = new TableView<Property>();
-		populateData(file.getName());
+		rawFileData(file.getName());
+		populateData();
 	}
 	
-	/**
-	 * Configures the input VBox and returns it.
-	 * @return
-	 * */
+	public FilteredList<Property> getFiltered() {
+		return this.filteredData;
+	}
+
 	public VBox configureInput() {
 		//vBox input labels
 		final Label labelIn = new Label("Find Property Assessment");
@@ -95,13 +107,6 @@ public class InputGUI {
 		labelNBH.setFont(new Font("Arial", 12));
 		final Label labelVal = new Label("Assessment Value");
 		labelVal.setFont(new Font("Arial", 12));
-		
-		//button and current file label
-		final Label labelFile = new Label("Current File");
-		labelFile.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-		labelCurr = new Label(file.getName());
-		labelCurr.setFont(new Font("Arial", 12));
-		button = new Button("Select File");
 		
 		//integer filter
 		UnaryOperator<Change> intFilter = change -> {
@@ -144,16 +149,46 @@ public class InputGUI {
 		resetBtn.setOnMouseClicked(new ResetButtonListener());
 		hBoxBtn.getChildren().addAll(searchBtn, resetBtn);
 		
+		//button and current file label
+		final Label labelFile = new Label("Current Dataset");
+		labelFile.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		labelCurr = new Label(file.getName());
+		labelCurr.setFont(new Font("Arial", 12));
+		
 		//filechooser
+		button = new Button("Select File");
 		fileChooser = new FileChooser();
+		String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+		fileChooser.setInitialDirectory(new File(currentPath));
 		button.setOnAction(e -> {
 			file = fileChooser.showOpenDialog(null);
-			populateData(file.getName());
+			rawFileData(file.getName());
+			populateData();
 			labelCurr.setText(file.getName());
 			updateTable();
 			reset();
 			search();
 		});
+		
+		//jsonchooser
+		buttonJSON = new Button("Load data from API");
+		buttonJSON.setOnAction(e ->{
+			System.out.println("Test");
+			try {
+				rawJSONData();
+			} catch (IOException | JSONException | NullPointerException e1) {
+				e1.printStackTrace();
+			}
+			populateData();
+			labelCurr.setText("https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117");
+			updateTable();
+			reset();
+			search();
+		});
+		
+		//button hbox
+		HBox hBox = new HBox(10);
+		hBox.getChildren().addAll(button, buttonJSON);
 		
 		//separator
 		Separator sep1 = new Separator();
@@ -165,7 +200,7 @@ public class InputGUI {
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
 				"-fx-border-color: lightgray;");
-		vBoxIn.getChildren().addAll(labelFile, labelCurr, button, sep1, labelIn, labelAcc, 
+		vBoxIn.getChildren().addAll(labelFile, labelCurr, hBox, sep1, labelIn, labelAcc, 
 				accNumField, labelAddr, addrField, labelNBH, nbhField, labelVal, hBoxCur,
 				labelClass, classComboBox, hBoxBtn);
 		
@@ -350,11 +385,20 @@ public class InputGUI {
 		}
 	}
 	
+	public void rawFileData(String filename){
+		System.out.println("Okay");
+		rawData = FileReader.getTableData(filename);
+	}
+	
+	public void rawJSONData() throws IOException, JSONException{
+		System.out.println("-1: API");
+		rawData = API.getAPIData();
+	}
+	
 	/**
 	 * populates the data of the class using a given filename.
 	 * */
-	public void populateData(String filename) {
-		rawData = FileReader.getTableData(filename);
+	public void populateData() {
 		data = FXCollections.observableArrayList(rawData);
 		filteredData = new FilteredList<Property>(data);
 		sortedData = new SortedList<Property>(filteredData);

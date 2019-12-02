@@ -22,6 +22,7 @@ public class RootNodeGUI {
 	List <Property> rawData;
 	private TextArea statistics;
 	private File file;
+	private ApiEdmonton API;
 	
 	/**
 	 * Initializes the data for the class
@@ -30,10 +31,11 @@ public class RootNodeGUI {
 	 * @param file
 	 * */
 	public RootNodeGUI(FilteredList <Property> filteredData, 
-			List <Property> rawData, File file) {
+			List <Property> rawData, File file, ApiEdmonton API) {
 		this.filteredData = filteredData;
 		this.rawData = rawData;
 		this.file = file;
+		this.API = API;
 	}
 	
 	/**
@@ -43,7 +45,7 @@ public class RootNodeGUI {
 	public BorderPane Pane() {
 		//rootnode, input and table configure
 		BorderPane rootNode = new BorderPane();
-		InputGUI input = new InputGUI(filteredData, rawData, file);
+		InputGUI input = new InputGUI(filteredData, rawData, file, API);
 		table = input.configureTable();
 		table.prefHeightProperty().bind(rootNode.heightProperty().multiply(0.90));
 		

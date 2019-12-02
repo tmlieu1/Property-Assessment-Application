@@ -2,6 +2,7 @@ package ca.macewan.cmpt305;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 //javafx imports
 import javafx.collections.FXCollections;
@@ -21,6 +22,7 @@ public class SecondNodeGUI {
 	private FilteredList <Property> filteredData;
 	private List <Property> rawData;
 	private File file;
+	private ApiEdmonton API;
 	
 	/**
 	 * Initializes the data for the class
@@ -28,10 +30,11 @@ public class SecondNodeGUI {
 	 * @param rawData
 	 * @param file
 	 * */
-	public SecondNodeGUI(FilteredList<Property> filteredData, List<Property> rawData, File file) {
+	public SecondNodeGUI(FilteredList<Property> filteredData, List<Property> rawData, File file, ApiEdmonton API) {
 		this.filteredData = filteredData;
 		this.rawData = rawData;
 		this.file = file;
+		this.API = API;
 	}
 	
 	/**
@@ -66,9 +69,16 @@ public class SecondNodeGUI {
 		vBoxCharts.getChildren().add(labelChart);
 		
 		//configures the input vbox
-		InputGUI input = new InputGUI(filteredData, rawData, file);
+		InputGUI input = new InputGUI(filteredData, rawData, file, API);
 		VBox vBoxIn = input.configureInput();
 		vBoxIn.getChildren().addAll(labelChoice, chartComboBox, button);
+		ChartBuilder chartData= new ChartBuilder(input.getFiltered());
+		Map<String,Integer> map = chartData.createMapAssClass();
+		Map<String,Integer> map1 = chartData.createMapNeigh();
+		Map<String,Integer> map2 = chartData.createMapWard();
+		System.out.println(map);
+		System.out.println(map1);
+		System.out.println(map2);
 		
 		//configures the borderpane
 		BorderPane secNode = new BorderPane();
