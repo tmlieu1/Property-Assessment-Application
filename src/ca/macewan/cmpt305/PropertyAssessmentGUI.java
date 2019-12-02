@@ -17,7 +17,6 @@ import javafx.scene.image.Image;
 
 //java utilities
 import java.util.List;
-import java.io.BufferedReader;
 import java.io.File;
 import java.text.NumberFormat;
 
@@ -35,6 +34,7 @@ public class PropertyAssessmentGUI extends Application {
 	
 	public void start(Stage primaryStage) throws Exception {
 		//fetch API data
+		
 		YEG = new ApiEdmonton();
 		
 		//populate data
@@ -45,7 +45,7 @@ public class PropertyAssessmentGUI extends Application {
 		BorderPane rootNode = tableNode.Pane();
 		
 		//BorderPane secondNode
-		SecondNodeGUI chartNode = new SecondNodeGUI(filteredData, rawData, file, YEG);
+		RootNodeGUI chartNode = new RootNodeGUI(filteredData, rawData, file, YEG);
 		BorderPane secondNode = chartNode.Pane();
 		
 		//BorderPane thirdNode

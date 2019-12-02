@@ -19,16 +19,16 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+
 public class ChartBuilder {
 	private List<Property> APIdata;
 	private String chartType = "";
 	private String dataType = "";
 	private VBox graph;
 	
-	public ChartBuilder() throws IOException, JSONException {
-		ApiEdmonton API = new ApiEdmonton();
-		API.getUrl();
-		this.APIdata = API.getExtractedAPIData(API.getbr());
+	public ChartBuilder(List<Property> APIdata) throws IOException, JSONException {
+		this.APIdata = APIdata;
 		this.graph = createChartBox();
 	}
 
@@ -55,7 +55,7 @@ public class ChartBuilder {
 	public Map<String, Integer> createMapWard() {
 		Map<String, Integer> map = new HashMap<String,Integer>();
 		String name;
-		for (int i = 0; i < this.APIdata.size()-1; i++) {
+		for (int i = 0; i < this.APIdata.size(); i++) {
 			if (this.APIdata.get(i).getNeighbourhood().getNBHWard().contentEquals("")) {
 				continue;
 			}
@@ -117,11 +117,12 @@ public class ChartBuilder {
 			return pieChart;
 		}
 		return null;
-}
+	}
 
 	public VBox getVbox() {
 		return this.graph;
 	}
+	
 	public VBox createChartBox() {
 		VBox chartBox = new VBox(10);
 		final Label labelCharts = new Label("Chart");
@@ -135,6 +136,7 @@ public class ChartBuilder {
 		chartBox.getChildren().addAll(chart);
 		return chartBox;
 	}
+	
 	public VBox createInputBox() {
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
@@ -180,6 +182,4 @@ public class ChartBuilder {
 		vBoxCharts.getChildren().addAll(labelTypeData, dataComboBox, hBoxBtn);
 		return vBoxCharts;
 	}
-	
-	
 }

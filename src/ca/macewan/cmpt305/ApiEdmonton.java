@@ -19,8 +19,13 @@ public class ApiEdmonton {
 	public ApiEdmonton() {
 		System.out.println("0: API");
 		String urlCount = "https://data.edmonton.ca/resource/q7d6-ambg.json?$select=count(total_asmt)";
-		String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117"; 
 		try {
+			//count
+			BufferedReader bc = getBR(urlCount);
+			String count = bc.readLine();
+			
+			//urlstring
+			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=" + getCount(count);
 			BufferedReader br = getBR(urlString);
 			extractAPIData(br);
 			System.out.println("0v: API");
@@ -28,6 +33,17 @@ public class ApiEdmonton {
 			System.out.println("0x: API");
 			e.printStackTrace();
 		}
+	}
+	
+	private int getCount(String strCount) {
+		String [] cArray = strCount.split("");
+		List<String> num = new ArrayList<String>();
+		for(String c : cArray) {
+			if (c.matches("[0-9]")){
+				num.add(c);
+			}
+		}
+		return Integer.parseInt(String.join("", num)) + 1;
 	}
 	
 	public BufferedReader getBR(String urlString) throws Exception{
@@ -41,7 +57,6 @@ public class ApiEdmonton {
 		}
 		finally {
 			if (br != null) {
-				br.close();
 			}
 		}
 	}
@@ -49,6 +64,8 @@ public class ApiEdmonton {
 	public List<Property> getAPIData(){
 		return propVals;
 	}
+	
+	
 	
 	public void extractAPIData(BufferedReader data) throws IOException, JSONException {
 		System.out.println("2: API");
@@ -114,5 +131,3 @@ public class ApiEdmonton {
 		}
 	}
 }
-
-

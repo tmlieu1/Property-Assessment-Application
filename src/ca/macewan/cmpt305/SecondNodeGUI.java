@@ -52,16 +52,14 @@ public class SecondNodeGUI {
 		//VBox vBoxCharts = new VBox(createPie("Ward"));
 		
 		//configures the input vbox
-		InputGUI input = new InputGUI(filteredData, rawData, file, API);
-		VBox vBoxIn = input.configureInput();
-		vBoxIn.getChildren().addAll(labelChoice, chartComboBox, button);
-		ChartBuilder chartData= new ChartBuilder(input.getFiltered());
+		ChartBuilder chartData= new ChartBuilder(rawData);
 		Map<String,Integer> map = chartData.createMapAssClass();
 		Map<String,Integer> map1 = chartData.createMapNeigh();
 		Map<String,Integer> map2 = chartData.createMapWard();
 		System.out.println(map);
 		System.out.println(map1);
-		System.out.println(mape2);
+		System.out.println(map2);
+		VBox vBoxIn = chartData.createInputBox();
 		VBox vBoxCharts = chartData.getVbox();
 		//configures the borderpane 
 		BorderPane secNode = new BorderPane();
