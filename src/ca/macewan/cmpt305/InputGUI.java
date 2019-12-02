@@ -76,10 +76,13 @@ public class InputGUI {
 		table = new TableView<Property>();
 		populateData(file.getName());
 	}
-	public FilteredList<Property> getFiltered() {
-		return this.filteredData;
+	public List<Property> getFiltered() {
+		return this.rawData;
 	}
-
+	/**
+	 * Configures the input VBox and returns it.
+	 * @return
+	 * */
 	public VBox configureInput() {
 		//vBox input labels
 		final Label labelIn = new Label("Find Property Assessment");
