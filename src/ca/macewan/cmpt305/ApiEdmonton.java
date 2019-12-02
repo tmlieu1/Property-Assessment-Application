@@ -18,6 +18,7 @@ public class ApiEdmonton {
 	
 	public ApiEdmonton() {
 		System.out.println("0: API");
+		String urlCount = "https://data.edmonton.ca/resource/q7d6-ambg.json?$select=count(total_asmt)";
 		String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117"; 
 		try {
 			BufferedReader br = getBR(urlString);
