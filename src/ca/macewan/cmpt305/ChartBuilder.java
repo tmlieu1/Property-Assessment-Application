@@ -23,20 +23,22 @@ public class ChartBuilder {
 	private List<Property> APIdata;
 	private String chartType = "";
 	private String dataType = "";
-	private VBox graph;
+	private Chart graph;
+	private VBox chartVBox;
 	
-	public ChartBuilder() throws IOException, JSONException {
+	public ChartBuilder(VBox chartVBox) throws IOException, JSONException {
 		ApiEdmonton API = new ApiEdmonton();
 		API.getUrl();
+		this.chartVBox = chartVBox;
 		this.APIdata = API.getExtractedAPIData(API.getbr());
-		this.graph = createChartBox();
+		this.graph = new PieChart();
 	}
 
 	public Map<String, Integer> createMapAssClass() {
 		Map<String, Integer> map = new HashMap<String,Integer>();
 		String name;
 		for (int i = 0; i < this.APIdata.size(); i++) {
-			if (this.APIdata.get(i).getAssessedClass() == null) {
+			if (this.APIdata.get(i).getAssessedClass().contentEquals("")) {
 				continue;
 			}
 			try {
@@ -92,12 +94,14 @@ public class ChartBuilder {
 		return map;
 	}
 
-	@SuppressWarnings("null")
+	@SuppressWarnings({ "null", "unchecked" })
 	public Chart createChart(){
 		if (this.dataType.contentEquals("") || this.chartType.contentEquals("")) {
 			PieChart null_chart = new PieChart();
 			return null_chart;
 		}
+		System.out.println(dataType);
+		System.out.println(chartType);
 		Map<String, Integer> chartData = new HashMap<String, Integer>();	
 		if (this.dataType == "Neighbourhood") {
 			chartData = createMapNeigh();
@@ -110,31 +114,40 @@ public class ChartBuilder {
 		}
 		if (this.chartType.contentEquals("Pie")) {
 			PieChart pieChart = new PieChart();
+			System.out.println("Im baking pie");
 			Set<String> keys = chartData.keySet();
 			for (String key: keys){
 				pieChart.getData().add(new PieChart.Data(key, chartData.get(key)));
 			}
 			return pieChart;
 		}
-		return null;
+		else if (this.chartType.contentEquals("Bar")) {
+			final CategoryAxis xAxis = new CategoryAxis();
+			final NumberAxis yAxis = new NumberAxis();
+			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
+			barChart.setTitle("Bar Graph");
+			xAxis.setLabel(this.dataType);
+			yAxis.setLabel("Value");
+			System.out.println("im in the milky way");
+			XYChart.Series<String, Number> bar = new XYChart.Series<String, Number>();
+			System.out.println("found the 3 musketters");
+			Set<String> keys = chartData.keySet();
+			for (String key: keys) {
+				bar.getData().add(new XYChart.Data<String, Number>(key, chartData.get(key)));
+			}
+			barChart.getData().addAll(bar);
+			System.out.println("Thats a candy bar");
+			return barChart;
+		}
+		else {
+			return (new PieChart());
+		}
 }
 
-	public VBox getVbox() {
+	public Chart getChart() {
 		return this.graph;
 	}
-	public VBox createChartBox() {
-		VBox chartBox = new VBox(10);
-		final Label labelCharts = new Label("Chart");
-		labelCharts.setFont(Font.font("Arial",FontWeight.BOLD, 16));
-		chartBox.setStyle("-fx-padding: 10;" +
-				"-fx-border-style: solid inside;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: lightgray;");
-		Chart chart = createChart();
-		chartBox.getChildren().addAll(chart);
-		return chartBox;
-	}
+	
 	public VBox createInputBox() {
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
@@ -165,7 +178,10 @@ public class ChartBuilder {
 			// gets data that was entered by the user
 			this.chartType = chartComboBox.valueProperty().getValue();
 			this.dataType = dataComboBox.valueProperty().getValue();
-			this.graph = createChartBox();
+			this.graph = createChart();
+			this.chartVBox.getChildren().clear();
+			this.chartVBox.getChildren().add(graph);
+			
 		});
 		hBoxBtn.getChildren().add(confirmBtn);
 		//vbox for the charts
