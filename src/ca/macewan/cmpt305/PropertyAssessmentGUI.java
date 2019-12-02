@@ -1,24 +1,25 @@
 package ca.macewan.cmpt305;
 
+import com.lynden.gmapsfx.GoogleMapView;
+
+import java.io.File;
+import java.text.NumberFormat;
+//java utilities
+import java.util.List;
+
 //javafx imports
 import javafx.application.Application;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.image.Image;
-
-//java utilities
-import java.util.List;
-import java.io.BufferedReader;
-import java.io.File;
-import java.text.NumberFormat;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 public class PropertyAssessmentGUI extends Application {
 	
@@ -55,6 +56,10 @@ public class PropertyAssessmentGUI extends Application {
 		WebEngine engine = map.getEngine();
 		String url = this.getClass().getResource("/ca/macewan/cmpt305/website.html").toExternalForm();
 		engine.load(url);
+		
+		
+		MapController theMap = new MapController();
+		
 		
 		//tabs
 		TabPane tabPane = new TabPane();
