@@ -3,6 +3,7 @@ package ca.macewan.cmpt305;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,15 +75,15 @@ public class InputGUI {
 	 * @param rawData
 	 * @param file
 	 * */
-	public InputGUI(FilteredList<Property> filteredData, List <Property> rawData, File file) {
+	public InputGUI(FilteredList<Property> filteredData, List <Property> rawData, File file, ApiEdmonton API) {
 		this.filteredData = filteredData;
 		this.rawData = rawData;
 		this.file = file;
 		this.statistics = new TextArea();
+		this.API = API;
 		table = new TableView<Property>();
 		rawFileData(file.getName());
 		populateData();
-		API = new ApiEdmonton();
 	}
 	
 	public FilteredList<Property> getFiltered() {
@@ -154,6 +155,8 @@ public class InputGUI {
 		//filechooser
 		button = new Button("Select File");
 		fileChooser = new FileChooser();
+		String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+		fileChooser.setInitialDirectory(new File(currentPath));
 		button.setOnAction(e -> {
 			file = fileChooser.showOpenDialog(null);
 			rawFileData(file.getName());

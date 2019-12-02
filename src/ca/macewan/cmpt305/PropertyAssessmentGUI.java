@@ -26,22 +26,25 @@ public class PropertyAssessmentGUI extends Application {
 	private List<Property> rawData;
 	private FilteredList<Property> filteredData;
 	private File file;
+	private ApiEdmonton YEG;
 	
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
 	public void start(Stage primaryStage) throws Exception {
-
+		//fetch API data
+		YEG = new ApiEdmonton();
+		
 		//populate data
 		file = new File("Property_Assessment_Data_2019.csv");
 		
 		//BorderPane rootNode
-		RootNodeGUI tableNode = new RootNodeGUI(filteredData, rawData, file);
+		RootNodeGUI tableNode = new RootNodeGUI(filteredData, rawData, file, YEG);
 		BorderPane rootNode = tableNode.Pane();
 		
 		//BorderPane secondNode
-		SecondNodeGUI chartNode = new SecondNodeGUI(filteredData, rawData, file);
+		SecondNodeGUI chartNode = new SecondNodeGUI(filteredData, rawData, file, YEG);
 		BorderPane secondNode = chartNode.Pane();
 		
 		//BorderPane thirdNode
