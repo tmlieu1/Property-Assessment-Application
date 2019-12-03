@@ -10,19 +10,26 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javafx.scene.control.ProgressBar;
+
 import java.util.ArrayList;
 import java.io.IOException;
 
 public class ApiEdmonton {
 	private List<Property> propVals;
+	private ProgressBar progress;
 	
 	public ApiEdmonton() {
 		System.out.println("0: API");
 		String urlCount = "https://data.edmonton.ca/resource/q7d6-ambg.json?$select=count(total_asmt)";
+		progress = new ProgressBar();
 		try {
 			//count
 			BufferedReader bc = getBR(urlCount);
 			String count = bc.readLine();
+			
+			//progressbar
 			
 			//urlstring
 			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=" + getCount(count);
@@ -33,6 +40,10 @@ public class ApiEdmonton {
 			System.out.println("0x: API");
 			e.printStackTrace();
 		}
+	}
+	
+	private ProgressBar getProgress() {
+		return progress;
 	}
 	
 	private int getCount(String strCount) {
@@ -128,6 +139,7 @@ public class ApiEdmonton {
 			Location loc = new Location(latit,longit);
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
 			propVals.add(prop);
+			progress.setProgress(prop.size());
 		}
 	}
 }

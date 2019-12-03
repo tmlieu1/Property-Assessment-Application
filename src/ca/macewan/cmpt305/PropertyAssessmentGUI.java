@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 
 //java utilities
 import java.util.List;
+
 import java.io.File;
 import java.text.NumberFormat;
 
@@ -33,8 +34,17 @@ public class PropertyAssessmentGUI extends Application {
 	}
 	
 	public void start(Stage primaryStage) throws Exception {
-		//fetch API data
 		
+		PreloaderGUI pre = new PreloaderGUI();
+		pre.start(primaryStage);
+		
+		//scene
+		primaryStage.setTitle("Edmonton Property Assessments");
+		primaryStage.getIcons().add(new Image("file:edmonton-logo.png"));
+		primaryStage.setMaximized(true);
+		primaryStage.show();
+		
+		//fetch API data
 		YEG = new ApiEdmonton();
 		
 		//populate data
@@ -66,12 +76,7 @@ public class PropertyAssessmentGUI extends Application {
 		Tab tab4 = new Tab("Comparison", thirdNode);
 		tabPane.getTabs().addAll(tab1, tab2, tab3, tab4);
 		
-		//scene
-		primaryStage.setTitle("Edmonton Property Assessments");
-		primaryStage.getIcons().add(new Image("file:edmonton-logo.png"));
 		Scene scene = new Scene(tabPane, Color.SLATEGRAY);
-		primaryStage.setMaximized(true);
 		primaryStage.setScene(scene);
-		primaryStage.show();
 	}
 }
