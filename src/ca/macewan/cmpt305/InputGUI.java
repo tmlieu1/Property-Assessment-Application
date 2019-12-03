@@ -400,4 +400,5 @@ public class InputGUI {
 		sortedData = new SortedList<Property>(filteredData);
 	}
 
+	
 }
