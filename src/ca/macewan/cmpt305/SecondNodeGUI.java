@@ -50,7 +50,7 @@ public class SecondNodeGUI {
 		//VBox vBoxCharts = new VBox(createPie("Ward"));
 		
 		//configures the input vbox
-		VBox vBoxCharts = new VBox(10);
+		VBox vBoxCharts = new VBox(5);
 		ChartBuilder chartData = new ChartBuilder(vBoxCharts);
 		VBox vBoxIn = chartData.createInputBox();
 		//vbox for the charts

@@ -96,8 +96,8 @@ public class ChartBuilder {
 
 	@SuppressWarnings({ "null", "unchecked" })
 	public Chart createChart(){
+		PieChart null_chart = new PieChart();
 		if (this.dataType.contentEquals("") || this.chartType.contentEquals("")) {
-			PieChart null_chart = new PieChart();
 			return null_chart;
 		}
 		System.out.println(dataType);
@@ -105,6 +105,7 @@ public class ChartBuilder {
 		Map<String, Integer> chartData = new HashMap<String, Integer>();	
 		if (this.dataType == "Neighbourhood") {
 			chartData = createMapNeigh();
+			System.out.println(chartData);
 		}
 		else if (this.dataType == "Assessment Class") {
 			chartData = createMapAssClass();
@@ -112,6 +113,7 @@ public class ChartBuilder {
 		else {
 			chartData = createMapWard();
 		}
+		
 		if (this.chartType.contentEquals("Pie")) {
 			PieChart pieChart = new PieChart();
 			System.out.println("Im baking pie");
@@ -140,7 +142,8 @@ public class ChartBuilder {
 			return barChart;
 		}
 		else {
-			return (new PieChart());
+			System.out.println("OMG");
+			return (null_chart);
 		}
 }
 
@@ -175,12 +178,12 @@ public class ChartBuilder {
 		HBox hBoxBtn = new HBox(10);
 		Button confirmBtn = new Button("Confirm");
 		confirmBtn.setOnAction(event -> {
-			// gets data that was entered by the user
+			System.out.println("Help");
 			this.chartType = chartComboBox.valueProperty().getValue();
 			this.dataType = dataComboBox.valueProperty().getValue();
 			this.graph = createChart();
 			this.chartVBox.getChildren().clear();
-			this.chartVBox.getChildren().add(graph);
+			this.chartVBox.getChildren().add(this.graph);
 			
 		});
 		hBoxBtn.getChildren().add(confirmBtn);
@@ -191,7 +194,6 @@ public class ChartBuilder {
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
 				"-fx-border-color: lightgray;");
-		//vBoxCharts.getChildren().add(labelChart);
 		vBoxCharts.getChildren().addAll(labelChoice, chartComboBox);
 		vBoxCharts.getChildren().addAll(labelTypeData, dataComboBox, hBoxBtn);
 		return vBoxCharts;
