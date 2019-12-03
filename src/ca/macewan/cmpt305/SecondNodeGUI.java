@@ -54,6 +54,7 @@ public class SecondNodeGUI {
 		VBox vBoxCharts = new VBox(5);
 		ChartBuilder chartData = new ChartBuilder(vBoxCharts, data);
 		VBox vBoxIn = chartData.createInputBox();
+		
 		//vbox for the charts
 		//configures the borderpane 
 		BorderPane secNode = new BorderPane();

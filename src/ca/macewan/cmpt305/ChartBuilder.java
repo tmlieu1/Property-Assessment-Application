@@ -166,6 +166,7 @@ public class ChartBuilder {
 			System.out.println("Bar is here");
 			final CategoryAxis xAxis = new CategoryAxis();
 			final NumberAxis yAxis = new NumberAxis();
+			
 			// buffer barChart
 			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
 			barChart.setTitle("Bar Graph");
@@ -231,6 +232,7 @@ public class ChartBuilder {
 			
 		});
 		hBoxBtn.getChildren().add(confirmBtn);
+		
 		//vbox for the charts
 		VBox vBoxCharts = new VBox(10);
 		vBoxCharts.setStyle("-fx-padding: 10;" +
@@ -242,6 +244,4 @@ public class ChartBuilder {
 		vBoxCharts.getChildren().addAll(labelTypeData, dataComboBox, hBoxBtn);
 		return vBoxCharts;
 	}
-	
-	
 }
