@@ -52,10 +52,7 @@ public class PropertyAssessmentGUI extends Application {
 		//BorderPane secondNode
 		RootNodeGUI chartNode = new RootNodeGUI(filteredData, rawData, file, YEG);
 		BorderPane secondNode = chartNode.Pane();
-		
-		//BorderPane thirdNode
-		BorderPane thirdNode = new BorderPane();
-		
+	
 		//webview
 		WebView map = new WebView();
 		WebEngine engine = map.getEngine();
@@ -68,8 +65,7 @@ public class PropertyAssessmentGUI extends Application {
 		Tab tab1 = new Tab("Table", rootNode);
 		Tab tab2 = new Tab("Map", map);
 		Tab tab3 = new Tab("Charts", secondNode);
-		Tab tab4 = new Tab("Comparison", thirdNode);
-		tabPane.getTabs().addAll(tab1, tab2, tab3, tab4);
+		tabPane.getTabs().addAll(tab1, tab2, tab3);
 		
 		//scene
 		Scene scene = new Scene(tabPane, Color.SLATEGRAY);
