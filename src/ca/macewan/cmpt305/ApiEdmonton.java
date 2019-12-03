@@ -1,6 +1,8 @@
 package ca.macewan.cmpt305;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -10,6 +12,11 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 import java.io.IOException;
 
@@ -21,13 +28,14 @@ public class ApiEdmonton {
 		String urlCount = "https://data.edmonton.ca/resource/q7d6-ambg.json?$select=count(total_asmt)";
 		try {
 			//count
-			BufferedReader bc = getBR(urlCount);
+			BufferedReader bc = getbufferRead(urlCount);
 			String count = bc.readLine();
 			
 			//urlstring
 			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=" + getCount(count);
-			BufferedReader br = getBR(urlString);
-			extractAPIData(br);
+			BufferedReader bufferRead = getbufferRead(urlString);
+			
+			extractAPIData(bufferRead);
 			System.out.println("0v: API");
 		} catch (Exception e) {
 			System.out.println("0x: API");
@@ -46,17 +54,17 @@ public class ApiEdmonton {
 		return Integer.parseInt(String.join("", num)) + 1;
 	}
 	
-	public BufferedReader getBR(String urlString) throws Exception{
-		BufferedReader br = null;
+	public BufferedReader getbufferRead(String urlString) throws Exception{
+		BufferedReader bufferRead = null;
 		try {	
 			URL url = new URL(urlString);
 			URLConnection con = url.openConnection();
 			InputStream is = con.getInputStream();
-			br = new BufferedReader(new InputStreamReader(is));		
-			return br;
+			bufferRead = new BufferedReader(new InputStreamReader(is));		
+			return bufferRead;
 		}
 		finally {
-			if (br != null) {
+			if (bufferRead != null) {
 			}
 		}
 	}
@@ -65,21 +73,46 @@ public class ApiEdmonton {
 		return propVals;
 	}
 	
-	
+//	private void createLocalJSON(Property data) throws IOException {
+//		FileWriter localJSON = new FileWriter("Properties.json");
+//		JsonObject
+////		Gson gson = new GsonBuilder()
+////				.disableHtmlEscaping()
+////				.setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+////				.setPrettyPrinting()
+////				.serializeNulls()
+////				.create();
+//		
+//		localJSON.write(gson.toJson(data));
+//		localJSON.flush();
+//		System.out.println(gson.toJson(data));
+//	}
 	
 	public void extractAPIData(BufferedReader data) throws IOException, JSONException {
 		System.out.println("2: API");
+//		Gson gson = new Gson();
 		propVals = new ArrayList<Property>();
 		String line = null;
-		StringBuilder sb = new StringBuilder();
+		StringBuilder stringBuild = new StringBuilder();
 		System.out.println("3: API");
 		while ((line = data.readLine()) != null) {
-			sb.append(line + '\n');
+			stringBuild.append(line + '\n');
+//			propVals.add(gson.fromJson(line, Property.class));
 		}
 		System.out.println("4: API");
-		JSONArray jsonArray = new JSONArray(sb.toString());
+		
+		File theFile = new File("Properties.json");
+		theFile.createNewFile();
+		
+		FileWriter localJSON = new FileWriter("Properties.json");
+		
+		JSONArray jsonArray = new JSONArray(stringBuild.toString());
+		
 		for (int i = 0; i < jsonArray.length(); i++) {
+//			Property convertedData = gson.fromJson(jsonArray.toJSONObject(JsonArray), Property.class);
 			JSONObject json = jsonArray.getJSONObject(i);
+			localJSON.write(json.toString());
+			localJSON.flush();
 			Integer account = json.getInt("account_number");
 			String suite;
 			try {
@@ -127,7 +160,10 @@ public class ApiEdmonton {
 			Neighbourhood nbh = new Neighbourhood(neigh_id, neigh, ward);
 			Location loc = new Location(latit,longit);
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
+//			createLocalJSON(prop);
 			propVals.add(prop);
 		}
+		
+		localJSON.close();
 	}
 }

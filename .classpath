@@ -31,5 +31,20 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="D:/Macewan/Computer Science journey/Fall 2019/CMPT 305/Final Project/jar_files/logback-classic-1.2.1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/Macewan/Computer Science journey/Fall 2019/CMPT 305/Final Project/jar_files/logback-core-1.2.1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/Macewan/Computer Science journey/Fall 2019/CMPT 305/Final Project/jar_files/slf4j-api-1.7.23.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

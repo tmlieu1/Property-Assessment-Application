@@ -18,34 +18,50 @@
   </head>
   
   <body>
-    <h3>My Google Maps Demo</h3>
+    <h3>Alberta Properties</h3>
     <!--The div element for the map -->
     <div id="map"></div>
     <script>
     // Initialize and add the map
       function initMap() {
+
+        var heatData = [];
         // The location of Edmonton
         var edmonton = {lat: 53.5461, lng: -113.4938};
         // The map, centered at Edmonton
-        var map = new google.maps.Map(
-            document.getElementById('map'), {zoom: 12, center: edmonton});
+        document.map = new google.maps.Map(
+            document.getElementById('map'), {zoom: 12, center: edmonton , mapTypeId: 'terrain'});
         // // The marker, positioned at Edmonton
         // var marker = new google.maps.Marker({position: edmonton, map: map});
+        document.setHeatMap = function setHeatMap(lat, long){
+          // for(var i = 0; i < lat.length || i < long.length; i++){
+            var latLong = new google.maps.LatLng(lat, long);
+            heatData.push(latLong);
+          // }
+        }
+
+        document.createHeatMap = function createHeatMap(){
+          var heatMap = new google.maps.visualization.HeatmapLayer({
+            data: heatData,
+            dissipating:false,
+            map: document.map
+          });
+        }
+        
       }
-      initMap();
     </script>
 
         
-    <script src = "./PropertyAssessmentGUI.java" id="PropertyAssessmentGUI" type="text/java"></script>
+    <!-- <script src = "./PropertyAssessmentGUI.java" id="PropertyAssessmentGUI" type="text/java"></script> -->
         
-    <script src = "./MapHandler.js" type="text/javascript"></script>
+    <!-- <script src = "./MapHandler.js" type="text/javascript"></script> -->
     <!--Load the API from the specified URL
     * The async attribute allows the browser to render the page while the API loads
     * The key parameter will contain your own API key (which is not needed for this tutorial)
     * The callback parameter executes the initMap() function
     -->
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCzolLE_i81Nc0aXE-qv8Nf0-EEeRCago&libraries=visualization&callback=main">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCzolLE_i81Nc0aXE-qv8Nf0-EEeRCago&libraries=visualization&callback=initMap">
     </script>
 
 

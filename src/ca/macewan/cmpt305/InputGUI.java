@@ -87,6 +87,7 @@ public class InputGUI {
 	public FilteredList<Property> getFiltered() {
 		return this.filteredData;
 	}
+	
 	/**
 	 * Configures the input VBox and returns it.
 	 * @return
@@ -381,6 +382,10 @@ public class InputGUI {
 			reset();
 			search();
 		}
+	}
+	
+	public List<Property> getRawData() {
+		return rawData;
 	}
 	
 	public void rawFileData(String filename){

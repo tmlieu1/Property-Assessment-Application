@@ -1,9 +1,8 @@
 package ca.macewan.cmpt305;
 
-import com.lynden.gmapsfx.GoogleMapView;
-
 import java.io.File;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 //java utilities
 import java.util.List;
 
@@ -20,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.image.Image;
@@ -63,11 +63,21 @@ public class PropertyAssessmentGUI extends Application {
 		//webview
 		WebView map = new WebView();
 		WebEngine engine = map.getEngine();
-		String url = this.getClass().getResource("/ca/macewan/cmpt305/website.html").toExternalForm();
+		String url = getClass().getResource("/ca/macewan/cmpt305/website.html").toString();
 		engine.load(url);
+		InputGUI input = new InputGUI(filteredData, rawData, file, YEG);
+		List<Property> rawerData = input.getRawData();
+		double[] lat = new double[rawerData.size()];
+		double[] lon = new double[rawerData.size()];
+		for(int i = 0; i < rawerData.size(); i++) {
+//			lat[i] = rawerData.get(i).getLocation().getLatitude();
+//			lon[i] = rawerData.get(i).getLocation().getLongitude();
+			engine.executeScript("document.setHeatMap(\"" + rawerData.get(i).getLocation().getLatitude() + "\", \"" + rawerData.get(i).getLocation().getLongitude() + "\")");
+		}
 		
 		
-		MapController theMap = new MapController();
+		
+//		MapController theMap = new MapController();
 		
 		
 		//tabs
