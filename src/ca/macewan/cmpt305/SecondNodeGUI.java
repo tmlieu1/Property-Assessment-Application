@@ -56,13 +56,8 @@ public class SecondNodeGUI {
 				"-fx-border-insets: 10, 10, 10, 10;" +
 				"-fx-border-color: lightgray;");
 		ChartBuilder chartData = new ChartBuilder(vBoxCharts, data);
-<<<<<<< HEAD
 		VBox vBoxIn = input.configureInput();
 		vBoxIn.getChildren().add(chartData.createInputBox());
-=======
-		VBox vBoxIn = chartData.createInputBox();
-		
->>>>>>> 47d89ad59d9562263e02bd368a3b6bd3a18cb0e8
 		//vbox for the charts
 		//configures the borderpane 
 		BorderPane secNode = new BorderPane();
