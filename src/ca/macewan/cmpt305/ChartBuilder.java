@@ -193,7 +193,8 @@ public class ChartBuilder {
 		return this.graph;
 	}
 	
-	public VBox createInputBox() {
+	public VBox configureChartInput() {
+		
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
 		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 16));
@@ -204,21 +205,26 @@ public class ChartBuilder {
 		final Label labelData = new Label("Data Type");
 		labelData.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 		
-		//comboBox and button
+		//comboBox for chart type
 		ObservableList<String> options = FXCollections.observableArrayList(
 				"Pie",
 				"Bar"
 				);
 		ComboBox<String>chartComboBox = new ComboBox<String>(options);
 		chartComboBox.setValue("");
+		
+		//combobox for chart parameters
 		ObservableList<String> optionData = FXCollections.observableArrayList(
 				"Neighbourhood",
 				"Assessment Class",
 				"Ward");
 		ComboBox<String> dataComboBox = new ComboBox<String>(optionData);
 		dataComboBox.setValue("");
+		
+		//hbox and button
 		HBox hBoxBtn = new HBox(10);
 		Button confirmBtn = new Button("Confirm");
+		hBoxBtn.getChildren().add(confirmBtn);
 		confirmBtn.setOnAction(event -> {
 			System.out.println("Help");
 			this.chartType = chartComboBox.valueProperty().getValue();
@@ -229,19 +235,11 @@ public class ChartBuilder {
 			}
 			this.chartVBox.getChildren().clear();
 			this.chartVBox.getChildren().add(this.graph);
-			
 		});
-		hBoxBtn.getChildren().add(confirmBtn);
 		
-		//vbox for the charts
+		//vbox
 		VBox vBoxCharts = new VBox(10);
-		vBoxCharts.setStyle("-fx-padding: 10;" +
-				"-fx-border-style: solid inside;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: lightgray;");
-		vBoxCharts.getChildren().addAll(labelChoice, chartComboBox);
-		vBoxCharts.getChildren().addAll(labelTypeData, dataComboBox, hBoxBtn);
+		vBoxCharts.getChildren().addAll(labelChoice, chartComboBox,labelTypeData, dataComboBox, hBoxBtn);
 		return vBoxCharts;
 	}
 }

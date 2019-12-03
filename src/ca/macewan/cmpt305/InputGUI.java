@@ -19,6 +19,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
+import javafx.scene.chart.Chart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -42,7 +43,6 @@ import javafx.util.converter.IntegerStringConverter;
 public class InputGUI {
 	
 	//data
-	private Map<String, Integer> map;
 	private FilteredList <Property> filteredData;
 	private List <Property> rawData;
 	private ObservableList<Property> data;
@@ -66,6 +66,7 @@ public class InputGUI {
 	private FileChooser fileChooser;
 	private Label labelCurr;
 	private TableView <Property> table;
+	private Chart graph;
 	
 	/**
 	 * Initializes the data for the class.
@@ -398,4 +399,5 @@ public class InputGUI {
 		filteredData = new FilteredList<Property>(data);
 		sortedData = new SortedList<Property>(filteredData);
 	}
+
 }
