@@ -34,15 +34,10 @@ public class PropertyAssessmentGUI extends Application {
 	}
 	
 	public void start(Stage primaryStage) throws Exception {
-		
+		//preloader
+		final Stage preloaderStage = new Stage();
 		PreloaderGUI pre = new PreloaderGUI();
-		pre.start(primaryStage);
-		
-		//scene
-		primaryStage.setTitle("Edmonton Property Assessments");
-		primaryStage.getIcons().add(new Image("file:edmonton-logo.png"));
-		primaryStage.setMaximized(true);
-		primaryStage.show();
+		pre.start(preloaderStage);
 		
 		//fetch API data
 		YEG = new ApiEdmonton();
@@ -76,7 +71,13 @@ public class PropertyAssessmentGUI extends Application {
 		Tab tab4 = new Tab("Comparison", thirdNode);
 		tabPane.getTabs().addAll(tab1, tab2, tab3, tab4);
 		
+		//scene
 		Scene scene = new Scene(tabPane, Color.SLATEGRAY);
+		primaryStage.setTitle("Edmonton Property Assessments");
+		primaryStage.getIcons().add(new Image("file:edmonton-logo.png"));
+		primaryStage.setMaximized(true);
 		primaryStage.setScene(scene);
+		primaryStage.show();
+		preloaderStage.close();
 	}
 }

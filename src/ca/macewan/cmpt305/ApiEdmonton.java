@@ -3,6 +3,7 @@ package ca.macewan.cmpt305;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -18,32 +19,23 @@ import java.io.IOException;
 
 public class ApiEdmonton {
 	private List<Property> propVals;
-	private ProgressBar progress;
+	private int limit;
 	
 	public ApiEdmonton() {
-		System.out.println("0: API");
 		String urlCount = "https://data.edmonton.ca/resource/q7d6-ambg.json?$select=count(total_asmt)";
-		progress = new ProgressBar();
 		try {
 			//count
 			BufferedReader bc = getBR(urlCount);
 			String count = bc.readLine();
-			
-			//progressbar
+			limit = getCount(count);
 			
 			//urlstring
-			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=" + getCount(count);
+			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=" + limit;
 			BufferedReader br = getBR(urlString);
 			extractAPIData(br);
-			System.out.println("0v: API");
 		} catch (Exception e) {
-			System.out.println("0x: API");
 			e.printStackTrace();
 		}
-	}
-	
-	private ProgressBar getProgress() {
-		return progress;
 	}
 	
 	private int getCount(String strCount) {
@@ -76,19 +68,19 @@ public class ApiEdmonton {
 		return propVals;
 	}
 	
-	
+  private static String readAll(Reader rd) throws IOException {
+	    StringBuilder sb = new StringBuilder();
+	    int cp;
+	    while ((cp = rd.read()) != -1) {
+	      sb.append((char) cp);
+	    }
+	    return sb.toString();
+	  }
 	
 	public void extractAPIData(BufferedReader data) throws IOException, JSONException {
-		System.out.println("2: API");
 		propVals = new ArrayList<Property>();
-		String line = null;
-		StringBuilder sb = new StringBuilder();
-		System.out.println("3: API");
-		while ((line = data.readLine()) != null) {
-			sb.append(line + '\n');
-		}
-		System.out.println("4: API");
-		JSONArray jsonArray = new JSONArray(sb.toString());
+		String jsonText = readAll(data);
+		JSONArray jsonArray = new JSONArray(jsonText);
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject json = jsonArray.getJSONObject(i);
 			Integer account = json.getInt("account_number");
@@ -139,7 +131,6 @@ public class ApiEdmonton {
 			Location loc = new Location(latit,longit);
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
 			propVals.add(prop);
-			progress.setProgress(prop.size());
 		}
 	}
 }

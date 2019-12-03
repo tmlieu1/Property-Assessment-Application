@@ -5,9 +5,12 @@ import javafx.application.Preloader.StateChangeNotification.Type;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class PreloaderGUI extends Preloader{
@@ -18,26 +21,20 @@ public class PreloaderGUI extends Preloader{
 		this.preloaderStage = primaryStage;
 		VBox loading = new VBox(10);
 		
-		final ProgressBar progress = new ProgressBar();
-		
-		progress.prefWidthProperty().bind(preloaderStage.widthProperty().multiply(0.5));
 		final Label wait = new Label("Please wait. . .");
+		wait.setFont(new Font("Verdana", 30));
 		
+		loading.getChildren().add(wait);
 		loading.setMaxWidth(Region.USE_PREF_SIZE);
 		loading.setMaxHeight(Region.USE_PREF_SIZE);
-		loading.getChildren().addAll(progress, wait);
 		
 		BorderPane root = new BorderPane(loading);
 		Scene scene = new Scene(root);
 		
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		preloaderStage.setTitle("Edmonton Property Assessments");
+		preloaderStage.getIcons().add(new Image("file:edmonton-logo.png"));
+		preloaderStage.setScene(scene);
+		preloaderStage.setMaximized(true);
+		preloaderStage.show();
 	}
-	
-   @Override
-   public void handleStateChangeNotification(StateChangeNotification stateChangeNotification) {
-      if (stateChangeNotification.getType() == Type.BEFORE_START) {
-         preloaderStage.hide();
-      }
-   }
 }

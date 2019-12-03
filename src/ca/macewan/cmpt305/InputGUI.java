@@ -171,7 +171,6 @@ public class InputGUI {
 		//jsonchooser
 		buttonJSON = new Button("Load data from API");
 		buttonJSON.setOnAction(e ->{
-			System.out.println("Test");
 			try {
 				rawJSONData();
 			} catch (IOException | JSONException | NullPointerException e1) {
@@ -384,12 +383,10 @@ public class InputGUI {
 	}
 	
 	public void rawFileData(String filename){
-		System.out.println("Okay");
 		rawData = FileReader.getTableData(filename);
 	}
 	
 	public void rawJSONData() throws IOException, JSONException{
-		System.out.println("-1: API");
 		rawData = API.getAPIData();
 	}
 	
