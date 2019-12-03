@@ -76,8 +76,8 @@ public class InputGUI {
 		table = new TableView<Property>();
 		populateData(file.getName());
 	}
-	public List<Property> getData() {
-		return this.rawData;
+	public FilteredList<Property> getFiltered() {
+		return this.filteredData;
 	}
 	/**
 	 * Configures the input VBox and returns it.

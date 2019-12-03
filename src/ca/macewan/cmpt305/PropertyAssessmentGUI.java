@@ -33,8 +33,6 @@ public class PropertyAssessmentGUI extends Application {
 	
 	public void start(Stage primaryStage) throws Exception {
 		//populate data
-		//API.getUrl();
-		//rawData = API.getExtractedAPIData(API.getbr());
 		file = new File("Property_Assessment_Data_2019.csv");
 		
 		//BorderPane rootNode
