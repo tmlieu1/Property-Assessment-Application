@@ -48,10 +48,11 @@ public class SecondNodeGUI {
 	public BorderPane Pane() throws IOException, JSONException {
 		//vbox for the charts
 		//VBox vBoxCharts = new VBox(createPie("Ward"));
-		
+		InputGUI input = new InputGUI(filteredData, rawData, file);
+		List<Property> data = input.getData();
 		//configures the input vbox
 		VBox vBoxCharts = new VBox(5);
-		ChartBuilder chartData = new ChartBuilder(vBoxCharts);
+		ChartBuilder chartData = new ChartBuilder(vBoxCharts, data);
 		VBox vBoxIn = chartData.createInputBox();
 		//vbox for the charts
 		//configures the borderpane 

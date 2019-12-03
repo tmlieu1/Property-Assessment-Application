@@ -76,7 +76,7 @@ public class InputGUI {
 		table = new TableView<Property>();
 		populateData(file.getName());
 	}
-	public List<Property> getFiltered() {
+	public List<Property> getData() {
 		return this.rawData;
 	}
 	/**

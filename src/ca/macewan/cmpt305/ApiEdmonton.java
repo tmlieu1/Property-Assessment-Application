@@ -85,7 +85,6 @@ public class ApiEdmonton {
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
 			propVals.add(prop);
 		}
-		System.out.println(jsonArray.length());
 		return propVals;
 	}
 }
