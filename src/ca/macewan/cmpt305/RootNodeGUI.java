@@ -47,7 +47,7 @@ public class RootNodeGUI {
 		BorderPane rootNode = new BorderPane();
 		InputGUI input = new InputGUI(filteredData, rawData, file, API);
 		table = input.configureTable();
-		table.prefHeightProperty().bind(rootNode.heightProperty().multiply(0.90));
+		table.prefHeightProperty().bind(rootNode.heightProperty().multiply(0.96));
 		
 		//separator and statistics textarea configured
 		Separator sep = new Separator();
@@ -56,8 +56,8 @@ public class RootNodeGUI {
 		//both vboxes are constructed and populated
 		VBox vBoxIn = input.configureInput();
 		VBox vBoxTable = configureRight();
-		vBoxIn.prefWidthProperty().bind(rootNode.widthProperty().multiply(0.22));
-		vBoxTable.prefWidthProperty().bind(rootNode.widthProperty().multiply(0.78));
+		vBoxIn.prefWidthProperty().bind(rootNode.widthProperty().multiply(0.18));
+		vBoxTable.prefWidthProperty().bind(rootNode.widthProperty().multiply(0.82));
 		vBoxIn.getChildren().addAll(sep, statistics);
 		
 		//aligns the vboxes in the rootnode and returns it

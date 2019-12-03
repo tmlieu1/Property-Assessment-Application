@@ -50,17 +50,14 @@ public class SecondNodeGUI {
 	public BorderPane Pane() throws IOException, JSONException {
 		//vbox for the charts
 		//VBox vBoxCharts = new VBox(createPie("Ward"));
-		
+		InputGUI input = new InputGUI(filteredData, rawData, file);
+		List<Property> data = input.getData();
 		//configures the input vbox
-		ChartBuilder chartData= new ChartBuilder(rawData);
-		Map<String,Integer> map = chartData.createMapAssClass();
-		Map<String,Integer> map1 = chartData.createMapNeigh();
-		Map<String,Integer> map2 = chartData.createMapWard();
-		System.out.println(map);
-		System.out.println(map1);
-		System.out.println(map2);
+		VBox vBoxCharts = new VBox(5);
+		ChartBuilder chartData = new ChartBuilder(vBoxCharts, data);
 		VBox vBoxIn = chartData.createInputBox();
-		VBox vBoxCharts = chartData.getVbox();
+		
+		//vbox for the charts
 		//configures the borderpane 
 		BorderPane secNode = new BorderPane();
 		vBoxIn.prefWidthProperty().bind(secNode.widthProperty().multiply(0.22));

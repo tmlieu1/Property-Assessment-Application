@@ -1,13 +1,9 @@
 package ca.macewan.cmpt305;
 
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.json.JSONException;
 
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
@@ -19,32 +15,49 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 
 public class ChartBuilder {
+	// initializing variables
 	private List<Property> APIdata;
 	private String chartType = "";
 	private String dataType = "";
-	private VBox graph;
+	private Chart graph;
+	private VBox chartVBox;
 	
-	public ChartBuilder(List<Property> APIdata) throws IOException, JSONException {
-		this.APIdata = APIdata;
-		this.graph = createChartBox();
+	/*
+	 * Consturctor for ChartBuilder Class
+	 * Will use the parameters VBox, List<Property>
+	 */
+	public ChartBuilder(VBox chartVBox, List<Property> data) {
+		this.chartVBox = chartVBox;
+		this.APIdata = data;
+		this.graph = new PieChart();
 	}
-
+	
+	/*
+	 * Purpose: Create a map, from factoring the Assessment class
+	 * Parameters: None
+	 * Returns: Map<String, Integer>
+	 *  
+	 */
 	public Map<String, Integer> createMapAssClass() {
 		Map<String, Integer> map = new HashMap<String,Integer>();
 		String name;
+		// if the data is empty go to the next line of data
 		for (int i = 0; i < this.APIdata.size(); i++) {
-			if (this.APIdata.get(i).getAssessedClass() == null) {
+			if (this.APIdata.get(i).getAssessedClass().contentEquals("")) {
 				continue;
 			}
+			// try and catch for adding or appending new keys to the map
 			try {
+				// if the name exists inside the map
 				name = this.APIdata.get(i).getAssessedClass();
 				int val = map.get(this.APIdata.get(i).getAssessedClass());
+				// replace value with an incremented one
 				map.replace(name,++val);
 				
 			} catch (Exception e) {
+				// adds new key to map
 				name = this.APIdata.get(i).getAssessedClass();
 				map.put(name, 1);
 			}
@@ -52,10 +65,18 @@ public class ChartBuilder {
 		return map;
 	}
 	
+	
+	/*
+	 * Purpose: Create a map, from factoring the Ward area
+	 * Parameters: None
+	 * Return: Map<String, Integer>
+	 * 
+	 */
 	public Map<String, Integer> createMapWard() {
 		Map<String, Integer> map = new HashMap<String,Integer>();
 		String name;
-		for (int i = 0; i < this.APIdata.size(); i++) {
+		// similar to the assessment class one
+		for (int i = 0; i < this.APIdata.size()-1; i++) {
 			if (this.APIdata.get(i).getNeighbourhood().getNBHWard().contentEquals("")) {
 				continue;
 			}
@@ -72,9 +93,15 @@ public class ChartBuilder {
 		return map;
 	}
 	
+	/*
+	 * Purpose: Create a map from factoring the Neighbourhoods
+	 * Parameter: None
+	 * Return: Map<String, Integer>
+	 */
 	public Map<String, Integer> createMapNeigh() {
 		Map<String, Integer> map = new HashMap<String,Integer>();
 		String name;
+		// similar to the ones above
 		for (int i = 0; i < this.APIdata.size(); i++) {
 			if (this.APIdata.get(i).getNBHName().contentEquals("")) {
 				continue;
@@ -92,13 +119,27 @@ public class ChartBuilder {
 		return map;
 	}
 
-	@SuppressWarnings("null")
+	/*
+	 * Purpose: This function will create a chart depending on the type of chart and data
+	 * 			and returns the chart
+	 * Parameter: None
+	 * Return: Chart Class
+	 * 
+	 */
+	@SuppressWarnings({ "unchecked" })
 	public Chart createChart(){
+		System.out.println("create chart");
+		System.out.println(this.chartType);
+		System.out.println(this.chartType.contentEquals("Bar"));
+		// initializes null chart as an empty chart
+		PieChart null_chart = new PieChart();
 		if (this.dataType.contentEquals("") || this.chartType.contentEquals("")) {
-			PieChart null_chart = new PieChart();
+			// if the data does not exist then it cannot produce a graph
 			return null_chart;
 		}
-		Map<String, Integer> chartData = new HashMap<String, Integer>();	
+		// create a buffer map
+		Map<String, Integer> chartData = new HashMap<String, Integer>();
+		// find which data type is chosen
 		if (this.dataType == "Neighbourhood") {
 			chartData = createMapNeigh();
 		}
@@ -108,33 +149,48 @@ public class ChartBuilder {
 		else {
 			chartData = createMapWard();
 		}
+		// if the chart type is pie
 		if (this.chartType.contentEquals("Pie")) {
 			PieChart pieChart = new PieChart();
+			System.out.println("Im baking pie");
+			// gets all the keys in the map
 			Set<String> keys = chartData.keySet();
+			// for loop to add all the data to the pie chart
 			for (String key: keys){
 				pieChart.getData().add(new PieChart.Data(key, chartData.get(key)));
 			}
 			return pieChart;
 		}
-		return null;
-	}
+		// if chart type is Bar
+		else if (this.chartType.contentEquals("Bar")) {
+			System.out.println("Bar is here");
+			final CategoryAxis xAxis = new CategoryAxis();
+			final NumberAxis yAxis = new NumberAxis();
+			
+			// buffer barChart
+			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
+			barChart.setTitle("Bar Graph");
+			xAxis.setLabel(this.dataType);
+			yAxis.setLabel("Value");
+			System.out.println("im in the milky way");
+			XYChart.Series<String, Number> bar = new XYChart.Series<String, Number>();
+			System.out.println("found the 3 musketters");
+			Set<String> keys = chartData.keySet();
+			for (String key: keys) {
+				bar.getData().add(new XYChart.Data<String, Number>(key, chartData.get(key)));
+			}
+			barChart.getData().addAll(bar);
+			System.out.println("Thats a candy bar");
+			return barChart;
+		}
+		else {
+			System.out.println("OMG");
+			return (null_chart);
+		}
+}
 
-	public VBox getVbox() {
+	public Chart getChart() {
 		return this.graph;
-	}
-	
-	public VBox createChartBox() {
-		VBox chartBox = new VBox(10);
-		final Label labelCharts = new Label("Chart");
-		labelCharts.setFont(Font.font("Arial",FontWeight.BOLD, 16));
-		chartBox.setStyle("-fx-padding: 10;" +
-				"-fx-border-style: solid inside;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: lightgray;");
-		Chart chart = createChart();
-		chartBox.getChildren().addAll(chart);
-		return chartBox;
 	}
 	
 	public VBox createInputBox() {
@@ -164,12 +220,19 @@ public class ChartBuilder {
 		HBox hBoxBtn = new HBox(10);
 		Button confirmBtn = new Button("Confirm");
 		confirmBtn.setOnAction(event -> {
-			// gets data that was entered by the user
+			System.out.println("Help");
 			this.chartType = chartComboBox.valueProperty().getValue();
 			this.dataType = dataComboBox.valueProperty().getValue();
-			this.graph = createChartBox();
+			this.graph = createChart();
+			if (this.graph == null) {
+				throw new NullPointerException("Error Null");
+			}
+			this.chartVBox.getChildren().clear();
+			this.chartVBox.getChildren().add(this.graph);
+			
 		});
 		hBoxBtn.getChildren().add(confirmBtn);
+		
 		//vbox for the charts
 		VBox vBoxCharts = new VBox(10);
 		vBoxCharts.setStyle("-fx-padding: 10;" +
@@ -177,7 +240,6 @@ public class ChartBuilder {
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
 				"-fx-border-color: lightgray;");
-		//vBoxCharts.getChildren().add(labelChart);
 		vBoxCharts.getChildren().addAll(labelChoice, chartComboBox);
 		vBoxCharts.getChildren().addAll(labelTypeData, dataComboBox, hBoxBtn);
 		return vBoxCharts;
