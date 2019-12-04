@@ -21,10 +21,10 @@
     <h3>Alberta Properties</h3>
     <!--The div element for the map -->
     <div id="map"></div>
-    <script>
+    <script type = 'text/javascript'>
     // Initialize and add the map
+      var heatData = [];
       function initMap() {
-
         var heatData = [];
         // The location of Edmonton
         var edmonton = {lat: 53.5461, lng: -113.4938};
@@ -33,22 +33,26 @@
             document.getElementById('map'), {zoom: 12, center: edmonton , mapTypeId: 'terrain'});
         // // The marker, positioned at Edmonton
         // var marker = new google.maps.Marker({position: edmonton, map: map});
-        document.setHeatMap = function setHeatMap(lat, long){
-          // for(var i = 0; i < lat.length || i < long.length; i++){
-            var latLong = new google.maps.LatLng(lat, long);
-            heatData.push(latLong);
-          // }
-        }
+        
+      }
 
-        document.createHeatMap = function createHeatMap(){
+      var setHeatMap = function setHeatMap(lat, long){
+            // for(var i = 0; i < lat.length || i < long.length; i++){
+          var latLong = new google.maps.LatLng(lat, long);
+          heatData.push(latLong);
+            // }
+      }
+
+      
+
+      function createHeatMap(){
           var heatMap = new google.maps.visualization.HeatmapLayer({
             data: heatData,
             dissipating:false,
             map: document.map
           });
-        }
-        
       }
+      
     </script>
 
         

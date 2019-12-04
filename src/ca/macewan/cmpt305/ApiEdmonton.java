@@ -101,18 +101,18 @@ public class ApiEdmonton {
 		}
 		System.out.println("4: API");
 		
-		File theFile = new File("Properties.json");
-		theFile.createNewFile();
+//		File theFile = new File("Properties.json");
+//		theFile.createNewFile();
 		
-		FileWriter localJSON = new FileWriter("Properties.json");
+//		FileWriter localJSON = new FileWriter("Properties.json");
 		
 		JSONArray jsonArray = new JSONArray(stringBuild.toString());
 		
 		for (int i = 0; i < jsonArray.length(); i++) {
 //			Property convertedData = gson.fromJson(jsonArray.toJSONObject(JsonArray), Property.class);
 			JSONObject json = jsonArray.getJSONObject(i);
-			localJSON.write(json.toString());
-			localJSON.flush();
+//			localJSON.write(json.toString());
+//			localJSON.flush();
 			Integer account = json.getInt("account_number");
 			String suite;
 			try {
@@ -164,6 +164,6 @@ public class ApiEdmonton {
 			propVals.add(prop);
 		}
 		
-		localJSON.close();
+//		localJSON.close();
 	}
 }
