@@ -53,7 +53,7 @@ public class SecondNodeGUI {
 	 * @throws IOException 
 	 * */
 	public BorderPane Pane() throws IOException, JSONException {
-		InputGUI input = new InputGUI(filteredData, rawData, file);
+		InputGUI input = new InputGUI(filteredData, rawData, file, API);
 		FilteredList<Property> data = input.getFiltered();
 		//configures the input vbox
 		VBox vBoxCharts = new VBox(10);
@@ -64,11 +64,10 @@ public class SecondNodeGUI {
 				"-fx-border-color: lightgray;");
 		ChartBuilder chartData = new ChartBuilder(vBoxCharts, data);
 		VBox vBoxIn = input.configureInput();
-		vBoxIn.getChildren().add(chartData.createInputBox());
+		vBoxIn.getChildren().add(chartData.configureChartInput());
 		//vbox for the charts
 		//configures the borderpane 
 		BorderPane secNode = new BorderPane();
-		InputGUI input = new InputGUI(filteredData, rawData, file, API);
 		chart = input.configureChart();
 		chart.prefHeightProperty().bind(secNode.heightProperty().multiply(0.96));
 		
@@ -78,7 +77,6 @@ public class SecondNodeGUI {
 		
 		
 		//vboxes are constructed and populated
-		VBox vBoxIn = input.configureInput();
 		VBox vBoxChartInput = input.configureChartInput();
 		VBox vBoxChart = input.getChartBox();
 		vBoxChart.setStyle("-fx-padding: 10;" +

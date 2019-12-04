@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 public class PreloaderGUI extends Preloader{
 	private Stage preloaderStage;
 	
-	@Override
 	public void start(Stage primaryStage) throws Exception{
 		this.preloaderStage = primaryStage;
 		VBox loading = new VBox(10);

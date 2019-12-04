@@ -233,7 +233,7 @@ public class ChartBuilder {
 		confirmBtn.setOnAction(event -> {
 			this.chartType = chartComboBox.valueProperty().getValue();
 			this.dataType = dataComboBox.valueProperty().getValue();
-			this.graph = configureChart();
+			this.graph = createChart();
 			if (this.graph == null) {
 				throw new NullPointerException("Error Null");
 			}
