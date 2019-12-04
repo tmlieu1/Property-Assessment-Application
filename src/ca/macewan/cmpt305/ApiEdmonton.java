@@ -41,6 +41,8 @@ public class ApiEdmonton {
 		for(String c : cArray) {
 			if (c.matches("[0-9]")){
 				num.add(c);
+				//purely for testing purposes
+				System.out.println((double)num.size()/(double)limit);
 			}
 		}
 		return Integer.parseInt(String.join("", num)) + 1;
@@ -128,7 +130,7 @@ public class ApiEdmonton {
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
 			propVals.add(prop);
 			//purely for testing purposes
-			System.out.println(propVals.size()/limit);
+			System.out.println((double)propVals.size()/(double)limit);
 		}
 	}
 }
