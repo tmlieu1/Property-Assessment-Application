@@ -74,23 +74,24 @@ public class PropertyAssessmentGUI extends Application {
 		//webview
 		WebView map = new WebView();
 		WebEngine engine = map.getEngine();
-		String url = getClass().getResource("/ca/macewan/cmpt305/website.html").toExternalForm();
+		String url = this.getClass().getResource("/ca/macewan/cmpt305/website.html").toExternalForm();
 		engine.getLoadWorker().stateProperty().addListener(
 				new ChangeListener<State>() {
 		            public void changed(ObservableValue ov, State oldState, State newState) {
 		            	if(newState == State.SUCCEEDED) {
-		                    //engine.executeScript("addPoint(0,-26.487000,151.984000)");
-		                	InputGUI input = new InputGUI(filteredData, rawData, file, YEG);
-		            		List<Property> rawerData = input.getRawData();
-		            		double[] lat = new double[rawerData.size()];
-		            		double[] lon = new double[rawerData.size()];
-		            		for(int i = 0; i < rawerData.size(); i++) {
-//		            			lat[i] = rawerData.get(i).getLocation().getLatitude();
-//		            			lon[i] = rawerData.get(i).getLocation().getLongitude();
-		            			engine.executeScript("setHeatMap(\"" + rawerData.get(i).getLocation().getLatitude() + "\", \"" + rawerData.get(i).getLocation().getLongitude() + "\")");
-		            		}
-		            		
-		            		engine.executeScript("createHeatMap()");
+		            		engine.executeScript("main()");
+//		                    //engine.executeScript("addPoint(0,-26.487000,151.984000)");
+//		                	InputGUI input = new InputGUI(filteredData, rawData, file, YEG);
+//		            		List<Property> rawerData = input.getRawData();
+//		            		double[] lat = new double[rawerData.size()];
+//		            		double[] lon = new double[rawerData.size()];
+//		            		for(int i = 0; i < rawerData.size(); i++) {
+////		            			lat[i] = rawerData.get(i).getLocation().getLatitude();
+////		            			lon[i] = rawerData.get(i).getLocation().getLongitude();
+//		            			engine.executeScript("setHeatMap(\"" + rawerData.get(i).getLocation().getLatitude() + "\", \"" + rawerData.get(i).getLocation().getLongitude() + "\")");
+//		            		}
+//		            		
+//		            		engine.executeScript("createHeatMap()");
 		                }
 		            }
 		        });
