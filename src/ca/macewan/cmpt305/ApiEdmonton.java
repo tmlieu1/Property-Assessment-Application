@@ -28,7 +28,7 @@ public class ApiEdmonton {
 		String urlCount = "https://data.edmonton.ca/resource/q7d6-ambg.json?$select=count(total_asmt)";
 		try {
 			//count
-			BufferedReader bc = getbufferRead(urlCount);
+			BufferedReader bc = getBR(urlCount);
 			String count = bc.readLine();
 			limit = getCount(count);
 			
@@ -53,7 +53,7 @@ public class ApiEdmonton {
 		return Integer.parseInt(String.join("", num)) + 1;
 	}
 	
-	public BufferedReader getbufferRead(String urlString) throws Exception{
+	public BufferedReader getBR(String urlString) throws Exception{
 		BufferedReader bufferRead = null;
 		try {	
 			URL url = new URL(urlString);
