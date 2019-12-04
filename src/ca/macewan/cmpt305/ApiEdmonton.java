@@ -27,7 +27,7 @@ public class ApiEdmonton {
 			
 			//urlstring
 			//String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$offset=395000&$limit=" + limit;
-			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=" + limit;
+			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$offset=395000&$limit=" + limit;
 			BufferedReader br = getBR(urlString);
 			extractAPIData(br);
 		} catch (Exception e) {
