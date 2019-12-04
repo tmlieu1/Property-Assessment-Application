@@ -81,7 +81,8 @@ function main(){
 
         var heatMap = new google.maps.visualization.HeatmapLayer({
             data: heatData,
-            dissipating: false,
+            dissipating: true,
+            maxIntensity: 10,
             map: maps
         })
         
