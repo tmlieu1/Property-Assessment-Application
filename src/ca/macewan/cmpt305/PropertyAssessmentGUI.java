@@ -68,6 +68,7 @@ public class PropertyAssessmentGUI extends Application {
 		
 		//scene
 		Scene scene = new Scene(tabPane);
+		scene.getStylesheets().add("path/stylesheet.css");
 		primaryStage.setTitle("Edmonton Property Assessments");
 		primaryStage.getIcons().add(new Image("file:edmonton-logo.png"));
 		primaryStage.setMaximized(true);
