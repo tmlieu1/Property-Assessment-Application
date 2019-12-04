@@ -4,16 +4,12 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import javafx.scene.control.ProgressBar;
-
 import java.util.ArrayList;
 import java.io.IOException;
 
@@ -30,7 +26,8 @@ public class ApiEdmonton {
 			limit = getCount(count);
 			
 			//urlstring
-			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$offset=390000&$limit=" + limit;
+			//String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$offset=395000&$limit=" + limit;
+			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$offset=395000&$limit=" + limit;
 			BufferedReader br = getBR(urlString);
 			extractAPIData(br);
 		} catch (Exception e) {
@@ -123,7 +120,6 @@ public class ApiEdmonton {
 			} catch(Exception e) {
 				ward = "";
 			}
-			String gar = json.getString("garage");
 			Double latit = json.getDouble("latitude");
 			Double longit = json.getDouble("longitude");
 			Address addr = new Address(suite,house_num,street_name);
@@ -131,6 +127,8 @@ public class ApiEdmonton {
 			Location loc = new Location(latit,longit);
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
 			propVals.add(prop);
+			//purely for testing purposes
+			System.out.println((double)propVals.size()/(double)limit);
 		}
 	}
 }

@@ -21,7 +21,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
@@ -31,6 +30,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
@@ -41,7 +41,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -72,12 +71,13 @@ public class InputGUI {
 	private TextArea statistics;
 	private Button button;
 	private Button buttonJSON;
+	private Button searchBtn;
 	
 	//table
 	private TableView <Property> table;
 	
 	//chart
-	private VBox vBoxChart;
+	private ScrollPane chartPane;
 	private String chartType = "";
 	private String dataType = "";
 	private Chart chart;
@@ -94,6 +94,7 @@ public class InputGUI {
 		this.file = file;
 		this.statistics = new TextArea();
 		this.API = API;
+		searchBtn = new Button("Search");
 		table = new TableView<Property>();
 		rawFileData(file.getName());
 		populateData();
@@ -155,9 +156,7 @@ public class InputGUI {
 		
 		//hBox btn
 		HBox hBoxBtn = new HBox(10);
-		Button searchBtn = new Button("Search");
 		Button resetBtn = new Button("Reset");
-		searchBtn.setOnMouseClicked(new SearchButtonListener());
 		resetBtn.setOnMouseClicked(new ResetButtonListener());
 		hBoxBtn.getChildren().addAll(searchBtn, resetBtn);
 		
@@ -170,16 +169,21 @@ public class InputGUI {
 		//filechooser
 		button = new Button("Select File");
 		fileChooser = new FileChooser();
+		
 		String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 		fileChooser.setInitialDirectory(new File(currentPath));
 		button.setOnAction(e -> {
 			file = fileChooser.showOpenDialog(null);
-			rawFileData(file.getName());
-			populateData();
-			labelCurr.setText(file.getName());
-			updateTable();
-			reset();
-			search();
+			if (file == null) {
+			}
+			else {
+				rawFileData(file.getName());
+				populateData();
+				labelCurr.setText(file.getName());
+				updateTable();
+				reset();
+				search();
+			}
 		});
 		
 		//jsonchooser
@@ -209,8 +213,8 @@ public class InputGUI {
 		vBoxIn.setStyle("-fx-padding: 10;" +
 				"-fx-border-style: solid inside;" +
 				"-fx-border-width: 1;" +
-				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: lightgray;");
+				"-fx-border-insets: 10, 10, 10, 10;"+
+				"-fx-border-color: a3a3a3;");
 		vBoxIn.getChildren().addAll(labelFile, labelCurr, hBox, sep1, labelIn, labelAcc, 
 				accNumField, labelAddr, addrField, labelNBH, nbhField, labelVal, hBoxCur,
 				labelClass, classComboBox, hBoxBtn);
@@ -285,7 +289,8 @@ public class InputGUI {
 	        public ObservableValue<Double> call(CellDataFeatures<Property, Double> p) {
 	            return new SimpleDoubleProperty(p.getValue().getLocation().getLongitude()).asObject();                
 	        }
-		}); 
+		});
+		searchBtn.setOnMouseClicked(new SearchButtonListener());
 		table.getColumns().setAll(accNumCol, addressCol, valCol, classCol, nbhCol, latCol, longCol);
 		updateTable();
 		return table;
@@ -529,11 +534,7 @@ public class InputGUI {
 	 * 
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public Chart configureChart(){
-		System.out.println("create chart");
-		System.out.println(chartType);
-		System.out.println(chartType.contentEquals("Bar"));
-		
+	public Chart configureChart(){	
 		// initializes null chart as an empty chart
 		PieChart null_chart = new PieChart();
 		if (dataType.contentEquals("") || chartType.contentEquals("")) {
@@ -547,7 +548,8 @@ public class InputGUI {
 		// if the chart type is pie, get all the keys in the map and add all the data to the pie chart.
 		if (chartType.contentEquals("Pie")) {
 			PieChart pieChart = new PieChart();
-			System.out.println("Im baking pie");
+			String title = "Number of Properties by " + this.dataType;
+			pieChart.setTitle(title);
 			// gets all the keys in the map
 			Set<String> keys = chartData.keySet();
 			// for loop to add all the data to the pie chart
@@ -559,34 +561,34 @@ public class InputGUI {
 		
 		// if chart type is Bar
 		else if (this.chartType.contentEquals("Bar")) {
-			System.out.println("Bar is here");
+			//configure axis titles
 			final CategoryAxis xAxis = new CategoryAxis();
 			final NumberAxis yAxis = new NumberAxis();
 			xAxis.setLabel(this.dataType);
 			yAxis.setLabel("Amount");
+			
 			// buffer barChart
 			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
-			barChart.setTitle("Bar Graph");
-			System.out.println("im in the milky way");
+			String title = "Number of Properties by " + this.dataType;
+			barChart.setTitle(title);
 			XYChart.Series<String, Number> bar = new XYChart.Series<String, Number>();
-			System.out.println("found the 3 musketters");
 			Set<String> keys = chartData.keySet();
 			for (String key: keys) {
 				bar.getData().add(new XYChart.Data<String, Number>(key, chartData.get(key)));
 			}
 			barChart.getData().addAll(bar);
-			System.out.println("Thats a candy bar");
 			return barChart;
 		}
 		else {
-			System.out.println("OMG");
 			return null_chart;
 		}
 	}
 	
 	public VBox configureChartInput() {
-		vBoxChart = new VBox(10);
-		vBoxChart.setAlignment(Pos.CENTER);
+		chartPane = new ScrollPane();
+		//vBoxChart = new VBox(10);
+		//vBoxChart.setAlignment(Pos.CENTER);
+		
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
 		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 16));
@@ -613,29 +615,34 @@ public class InputGUI {
 		ComboBox<String> dataComboBox = new ComboBox<String>(optionData);
 		dataComboBox.setValue("");
 		
-		//hbox and button
-		HBox hBoxBtn = new HBox(10);
-		Button confirmBtn = new Button("Confirm");
-		hBoxBtn.getChildren().add(confirmBtn);
-		confirmBtn.setOnAction(event -> {
-			System.out.println("Help");
+		searchBtn.setOnAction(event -> {
+			search();
 			chartType = chartComboBox.valueProperty().getValue();
 			dataType = dataComboBox.valueProperty().getValue();
 			chart = configureChart();
 			if (chart == null) {
 				throw new NullPointerException("Error Null");
 			}
-			vBoxChart.getChildren().clear();
-			vBoxChart.getChildren().add(chart);
+			
+			if (dataType == "Neighbourhood" && chartType == "Bar") {
+				chart.setMinSize(chartPane.getWidth() * 8, chartPane.getHeight() * 0.9);
+			}
+			else {
+				chart.setMinSize(chartPane.getWidth() * 0.9, chartPane.getHeight() * 0.9);
+			}
+			chartPane.setContent(chart);
+			
+			//vBoxChart.getChildren().clear();
+			//vBoxChart.getChildren().add(chart);
 		});
 		
 		//vbox
 		VBox vBoxChartInput = new VBox(10);
-		vBoxChartInput.getChildren().addAll(labelChoice, chartComboBox,labelTypeData, dataComboBox, hBoxBtn);
+		vBoxChartInput.getChildren().addAll(labelChoice, chartComboBox,labelTypeData, dataComboBox);
 		return vBoxChartInput;
 	}
 	
-	public VBox getChartBox() {
-		return vBoxChart;
+	public ScrollPane getChartBox() {
+		return chartPane;
 	}
 }

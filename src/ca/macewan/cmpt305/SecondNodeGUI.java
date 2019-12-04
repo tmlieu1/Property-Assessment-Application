@@ -3,21 +3,14 @@ package ca.macewan.cmpt305;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-
 import org.json.JSONException;
 
 //javafx imports
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.chart.Chart;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 /**
  * Represents the chart node for the controller GUI
@@ -28,7 +21,6 @@ public class SecondNodeGUI {
 	private FilteredList <Property> filteredData;
 	private List <Property> rawData;
 	private TextArea statistics;
-	private VBox chartInput;
 	private File file;
 	private ApiEdmonton API;
 	
@@ -73,24 +65,25 @@ public class SecondNodeGUI {
 		
 		//separator and statistics textarea configured
 		Separator sep = new Separator();
+		Separator sep2 = new Separator();
 		statistics = input.configureStats();
 		
 		
 		//vboxes are constructed and populated
 		VBox vBoxChartInput = input.configureChartInput();
-		VBox vBoxChart = input.getChartBox();
-		vBoxChart.setStyle("-fx-padding: 10;" +
+		ScrollPane chartPane = input.getChartBox();
+		chartPane.setStyle("-fx-padding: 10;" +
 				"-fx-border-style: solid inside;" +
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: lightgray;");
+				"-fx-border-color: a3a3a3;");
 		vBoxIn.prefWidthProperty().bind(secNode.widthProperty().multiply(0.18));
-		vBoxChart.prefWidthProperty().bind(secNode.widthProperty().multiply(0.82));
-		vBoxChart.prefHeightProperty().bind(secNode.heightProperty());
-		vBoxIn.getChildren().addAll(sep, statistics, vBoxChartInput);
+		chartPane.prefWidthProperty().bind(secNode.widthProperty().multiply(0.82));
+		chartPane.prefHeightProperty().bind(secNode.heightProperty());
+		vBoxIn.getChildren().addAll(sep, vBoxChartInput, sep2, statistics);
 		
 		secNode.setLeft(vBoxIn);
-		secNode.setCenter(vBoxChart);
+		secNode.setCenter(chartPane);
 		return secNode;
 	}
 }

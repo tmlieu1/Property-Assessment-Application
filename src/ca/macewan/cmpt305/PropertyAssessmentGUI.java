@@ -13,6 +13,8 @@ import javafx.scene.web.WebView;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 //java utilities
 import java.util.List;
@@ -38,6 +40,10 @@ public class PropertyAssessmentGUI extends Application {
 		PreloaderGUI pre = new PreloaderGUI();
 		pre.start(preloaderStage);
 		
+		//start
+		TabPane tabPane = new TabPane();
+		Scene scene = new Scene(tabPane);
+		
 		//fetch API data
 		YEG = new ApiEdmonton();
 		
@@ -58,16 +64,39 @@ public class PropertyAssessmentGUI extends Application {
 		String url = this.getClass().getResource("/ca/macewan/cmpt305/website.html").toExternalForm();
 		engine.load(url);
 		
+		//options
+		Image sun = new Image("file:sun.png");
+		Image moon = new Image("file:moon.png");
+		ImageView option = new ImageView();
+		option.setImage(moon);
+		option.setOnMouseClicked((MouseEvent e) ->{
+			if (option.getImage().equals(moon)) {
+				scene.getStylesheets().clear();
+				scene.getStylesheets().add(getClass().getResource("stylesheetdark.css").toString());
+				option.setImage(sun);
+			}
+			else if (option.getImage().equals(sun)) {
+				scene.getStylesheets().clear();
+				scene.getStylesheets().add(getClass().getResource("stylesheetlight.css").toString());
+				option.setImage(moon);
+			}
+		});
+		BorderPane optionNode = new BorderPane();
+		option.setPreserveRatio(true);
+		option.fitWidthProperty().bind(optionNode.widthProperty().multiply(0.75));
+		option.fitHeightProperty().bind(optionNode.heightProperty().multiply(0.75));
+		optionNode.setCenter(option);
+		
 		//tabs
-		TabPane tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		Tab tab1 = new Tab("Table", rootNode);
 		Tab tab2 = new Tab("Charts", secondNode);
 		Tab tab3 = new Tab("Map", map);
-		tabPane.getTabs().addAll(tab1, tab2, tab3);
+		Tab tab4 = new Tab("Options", optionNode);
+		tabPane.getTabs().addAll(tab1, tab2, tab3, tab4);
 		
-		//scene
-		Scene scene = new Scene(tabPane);
+		//stage
+		scene.getStylesheets().add(getClass().getResource("stylesheetlight.css").toString());
 		primaryStage.setTitle("Edmonton Property Assessments");
 		primaryStage.getIcons().add(new Image("file:edmonton-logo.png"));
 		primaryStage.setMaximized(true);

@@ -80,7 +80,7 @@ public class RootNodeGUI {
 				"-fx-border-style: solid inside;" +
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: lightgray;");
+			    "-fx-border-color: a3a3a3;");
 		vBox.getChildren().addAll(label, table);
 		return vBox;
 	}
