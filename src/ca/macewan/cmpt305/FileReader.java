@@ -9,11 +9,10 @@ import java.util.Scanner;
 
 public class FileReader {
 	
-    /*	@readFile(String filename)
-     * 	purpose: reads through a file row by row and creating a Property List from the data gathered.
-     * 	parameters: String filename - file to read from.
-     * 	pre: filename is a valid String.
-     * 	returns: List<Property> pa
+    /**	
+     *	Reads through a file row by row and creating a Property List from the data gathered.
+     * 	@param filename
+     * 	@return
      */
 	public static List<Property> readFile(String filename) throws IOException {
 		List<Property> pa = new ArrayList<>();
@@ -42,7 +41,11 @@ public class FileReader {
 		return pa;
 	}
 	
-	//Creates a List of Properties from the file.
+	/**
+	 * Creates a List of Properties from the file
+	 * @param filename
+	 * @return
+	 */
 	public static List<Property> getFileContents(String filename){
 		List <Property> pa = new ArrayList<>();
 		try {
@@ -54,7 +57,11 @@ public class FileReader {
 		}
 	}
 	
-	//Returns the List of Properties
+	/**
+	 * Returns the List of Properties
+	 * @param filename
+	 * @return
+	 */
 	public static List<Property> getTableData(String filename) {
 		List <Property> propertyValues = FileReader.getFileContents(filename);
 		return propertyValues;

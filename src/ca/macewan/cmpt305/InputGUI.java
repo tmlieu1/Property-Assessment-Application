@@ -100,9 +100,14 @@ public class InputGUI {
 		populateData();
 	}
 	
+	/**
+	 * Returns the filteredData
+	 * @return 
+	 */
 	public FilteredList<Property> getFiltered() {
 		return this.filteredData;
 	}
+	
 	/**
 	 * Configures the input VBox and returns it.
 	 * @return
@@ -170,7 +175,6 @@ public class InputGUI {
 		//filechooser
 		button = new Button("Select File");
 		fileChooser = new FileChooser();
-		
 		String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 		fileChooser.setInitialDirectory(new File(currentPath));
 		button.setOnAction(e -> {
@@ -420,33 +424,31 @@ public class InputGUI {
 	}
 
 
-	/******************************************************************************************************************
-	 * CHART STUFF
-	 ******************************************************************************************************************/
-	/*
-	 * Purpose: Create a map, from factoring the Assessment class
-	 * Parameters: None
-	 * Returns: Map<String, Integer>
-	 *  
+/******************************************************************************************************************\
+* CHART CODE																									   *
+\******************************************************************************************************************/
+	/**
+	 * Create a map, from factoring the Assessment class
+	 * @return
 	 */
 	public Map<String, Integer> createMapAssClass() {
 		Map<String, Integer> map = new HashMap<String,Integer>();
 		String name;
-		// if the data is empty go to the next line of data
+		//if the data is empty go to the next line of data
 		for (int i = 0; i < this.filteredData.size(); i++) {
 			if (this.filteredData.get(i).getAssessedClass().contentEquals("")) {
 				continue;
 			}
-			// try and catch for adding or appending new keys to the map
+			//try and catch for adding or appending new keys to the map
 			try {
-				// if the name exists inside the map
+				//if the name exists inside the map
 				name = this.filteredData.get(i).getAssessedClass();
 				int val = map.get(this.filteredData.get(i).getAssessedClass());
-				// replace value with an incremented one
+				//replace value with an incremented one
 				map.replace(name,++val);
 				
 			} catch (Exception e) {
-				// adds new key to map
+				//adds new key to map
 				name = this.filteredData.get(i).getAssessedClass();
 				map.put(name, 1);
 			}
@@ -455,11 +457,9 @@ public class InputGUI {
 	}
 	
 	
-	/*
-	 * Purpose: Create a map, from factoring the Ward area
-	 * Parameters: None
-	 * Return: Map<String, Integer>
-	 * 
+	/**
+	 * Create a map, from factoring the Ward area.
+	 * @return 
 	 */
 	public Map<String, Integer> createMapWard() {
 		Map<String, Integer> map = new HashMap<String,Integer>();
@@ -482,10 +482,9 @@ public class InputGUI {
 		return map;
 	}
 	
-	/*
-	 * Purpose: Create a map from factoring the Neighbourhoods
-	 * Parameter: None
-	 * Return: Map<String, Integer>
+	/**
+	 * Create a map from factoring the Neighbourhoods.
+	 * @return
 	 */
 	public Map<String, Integer> createMapNeigh() {
 		Map<String, Integer> map = new HashMap<String,Integer>();
@@ -509,7 +508,7 @@ public class InputGUI {
 	}
 
 	/**
-	 * creates a hashmap based on the data choice
+	 * Creates a hashmap based on the data choice
 	 * @param dataChoice
 	 * @return
 	 */
@@ -527,52 +526,50 @@ public class InputGUI {
 		return chartData;
 	}
 	
-	/*
-	 * Purpose: This function will create a chart depending on the type of chart and data
-	 * 			and returns the chart
-	 * Parameter: None
-	 * Return: Chart Class
-	 * 
+	
+	/**
+	 *  Creates a chart depending on the type of chart and data and returns the chart
+	 *  @return
 	 */
 	@SuppressWarnings({ "unchecked" })
 	public Chart configureChart(){	
-		// initializes null chart as an empty chart
+		
+		//Null Chart
 		PieChart null_chart = new PieChart();
 		if (dataType.contentEquals("") || chartType.contentEquals("")) {
-			// if the data does not exist then it cannot produce a graph
 			return null_chart;
 		}
 		
 		// create a buffer map
 		Map<String, Integer> chartData = getChartData(dataType);
 		
-		// if the chart type is pie, get all the keys in the map and add all the data to the pie chart.
+		//Pie Chart
 		if (chartType.contentEquals("Pie")) {
 			PieChart pieChart = new PieChart();
+			//title
 			String title = "Number of Properties by " + this.dataType;
 			pieChart.setTitle(title);
-			// gets all the keys in the map
+			//set keys to chart
 			Set<String> keys = chartData.keySet();
-			// for loop to add all the data to the pie chart
 			for (String key: keys){
 				pieChart.getData().add(new PieChart.Data(key, chartData.get(key)));
 			}
 			return pieChart;
 		}
 		
-		// if chart type is Bar
+		//Bar Chart
 		else if (this.chartType.contentEquals("Bar")) {
 			//configure axis titles
 			final CategoryAxis xAxis = new CategoryAxis();
 			final NumberAxis yAxis = new NumberAxis();
 			xAxis.setLabel(this.dataType);
 			yAxis.setLabel("Amount");
-			
-			// buffer barChart
+			//buffer barChart
 			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
 			String title = "Number of Properties by " + this.dataType;
 			barChart.setTitle(title);
 			XYChart.Series<String, Number> bar = new XYChart.Series<String, Number>();
+			//set keys to chart
 			Set<String> keys = chartData.keySet();
 			for (String key: keys) {
 				bar.getData().add(new XYChart.Data<String, Number>(key, chartData.get(key)));
@@ -580,15 +577,18 @@ public class InputGUI {
 			barChart.getData().addAll(bar);
 			return barChart;
 		}
+		
 		else {
 			return null_chart;
 		}
 	}
 	
+	/**
+	 * Configures the input and scrollpane for the chart and returns it.
+	 * @return
+	 */
 	public VBox configureChartInput() {
 		chartPane = new ScrollPane();
-		//vBoxChart = new VBox(10);
-		//vBoxChart.setAlignment(Pos.CENTER);
 		
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
@@ -616,6 +616,7 @@ public class InputGUI {
 		ComboBox<String> dataComboBox = new ComboBox<String>(optionData);
 		dataComboBox.setValue("");
 		
+		//search button action
 		searchBtn.setOnAction(event -> {
 			search();
 			chartType = chartComboBox.valueProperty().getValue();
@@ -632,9 +633,6 @@ public class InputGUI {
 				chart.setMinSize(chartPane.getWidth() * 0.9, chartPane.getHeight() * 0.9);
 			}
 			chartPane.setContent(chart);
-			
-			//vBoxChart.getChildren().clear();
-			//vBoxChart.getChildren().add(chart);
 		});
 		
 		//vbox
@@ -643,6 +641,10 @@ public class InputGUI {
 		return vBoxChartInput;
 	}
 	
+	/**
+	 * Returns the chart scrollpane
+	 * @return
+	 */
 	public ScrollPane getChartBox() {
 		return chartPane;
 	}

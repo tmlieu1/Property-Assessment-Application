@@ -1,7 +1,5 @@
 package ca.macewan.cmpt305;
-//Account Number,Suite,House Number,Street Name,Assessed Value,Assessment Class,Neighbourhood ID,Neighbourhood,Ward,Garage,Latitude,Longitude
-//10202374,,455,MCCONACHIE WAY NW,381500,Residential,2521,MCCONACHIE AREA,Ward 3,Y,53.6308420714181,-113.428512065557
-//9969312,,15519,103 STREET NW,463500,Residential,3040,BEAUMARIS,Ward 2,Y,53.6168355459535,-113.50036842843
+
 public class Property implements Comparable<Property> {
 	private int accountNum;
 	private Address address;

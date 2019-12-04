@@ -71,6 +71,7 @@ public class SecondNodeGUI {
 		chartPane.prefHeightProperty().bind(secNode.heightProperty());
 		vBoxIn.getChildren().addAll(sep, vBoxChartInput, sep2, statistics);
 		
+		//secnode settings
 		secNode.setLeft(vBoxIn);
 		secNode.setCenter(chartPane);
 		return secNode;

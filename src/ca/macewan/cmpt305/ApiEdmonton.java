@@ -17,6 +17,9 @@ public class ApiEdmonton {
 	private List<Property> propVals;
 	private int limit;
 	
+	/**
+	 * Constructs the Api object
+	 */
 	public ApiEdmonton() {
 		String urlCount = "https://data.edmonton.ca/resource/q7d6-ambg.json?$select=count(total_asmt)";
 		try {
@@ -25,9 +28,9 @@ public class ApiEdmonton {
 			String count = bc.readLine();
 			limit = getCount(count);
 			
-			//urlstring
+			//bufferedreader
 			//String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$offset=395000&$limit=" + limit;
-			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$offset=395000&$limit=" + limit;
+			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$$limit=" + limit;
 			BufferedReader br = getBR(urlString);
 			extractAPIData(br);
 		} catch (Exception e) {
@@ -35,6 +38,11 @@ public class ApiEdmonton {
 		}
 	}
 	
+	/**
+	 * Gets the amount of objects in the json file and returns it.
+	 * @param strCount
+	 * @return
+	 */
 	private int getCount(String strCount) {
 		String [] cArray = strCount.split("");
 		List<String> num = new ArrayList<String>();
@@ -46,7 +54,12 @@ public class ApiEdmonton {
 		return Integer.parseInt(String.join("", num)) + 1;
 	}
 	
-	public BufferedReader getBR(String urlString) throws Exception{
+	/**
+	 * Gets the bufferedreader from a url given a urlstring.
+	 * @param urlString
+	 * @return 
+	 */
+	private BufferedReader getBR(String urlString) throws Exception{
 		BufferedReader br = null;
 		try {	
 			URL url = new URL(urlString);
@@ -61,24 +74,38 @@ public class ApiEdmonton {
 		}
 	}
 	
+	/**
+	 * Returns the API Data in the class
+	 * @return
+	 */
 	public List<Property> getAPIData(){
 		return propVals;
 	}
 	
-  private static String readAll(Reader rd) throws IOException {
+	/**
+	 * returns the string representation of the given reader
+	 * @param reader
+	 * @return
+	 */
+	private static String readAll(Reader rd) throws IOException {
 	    StringBuilder sb = new StringBuilder();
 	    int cp;
 	    while ((cp = rd.read()) != -1) {
 	      sb.append((char) cp);
 	    }
 	    return sb.toString();
-	  }
+	}
 	
-	public void extractAPIData(BufferedReader data) throws IOException, JSONException {
+	/**
+	 * Extracts the data from the API as a local arraylist
+	 * @param data
+	 */
+	private void extractAPIData(BufferedReader data) throws IOException, JSONException {
 		propVals = new ArrayList<Property>();
 		String jsonText = readAll(data);
 		JSONArray jsonArray = new JSONArray(jsonText);
 		for (int i = 0; i < jsonArray.length(); i++) {
+			//fetching property info from the json and creating new properties from it
 			JSONObject json = jsonArray.getJSONObject(i);
 			Integer account = json.getInt("account_number");
 			String suite;
@@ -127,8 +154,6 @@ public class ApiEdmonton {
 			Location loc = new Location(latit,longit);
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
 			propVals.add(prop);
-			//purely for testing purposes
-			System.out.println((double)propVals.size()/(double)limit);
 		}
 	}
 }

@@ -22,6 +22,9 @@ import java.util.List;
 import java.io.File;
 import java.text.NumberFormat;
 
+/**
+ * Main controller to display all relevant modules
+ */
 public class PropertyAssessmentGUI extends Application {
 	
 	NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
@@ -30,10 +33,16 @@ public class PropertyAssessmentGUI extends Application {
 	private File file;
 	private ApiEdmonton YEG;
 	
+	/**
+	 * Launch arguments
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
+	/**
+	 * Start function displays the window when instantiated.
+	 */
 	public void start(Stage primaryStage) throws Exception {
 		//preloader
 		final Stage preloaderStage = new Stage();
@@ -69,6 +78,8 @@ public class PropertyAssessmentGUI extends Application {
 		Image moon = new Image("file:moon.png");
 		ImageView option = new ImageView();
 		option.setImage(moon);
+		
+		//on image click, clear and change the css
 		option.setOnMouseClicked((MouseEvent e) ->{
 			if (option.getImage().equals(moon)) {
 				scene.getStylesheets().clear();
@@ -81,6 +92,8 @@ public class PropertyAssessmentGUI extends Application {
 				option.setImage(moon);
 			}
 		});
+		
+		//bind the image to a borderpane and set it
 		BorderPane optionNode = new BorderPane();
 		option.setPreserveRatio(true);
 		option.fitWidthProperty().bind(optionNode.widthProperty().multiply(0.75));
