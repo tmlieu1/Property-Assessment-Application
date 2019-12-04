@@ -127,6 +127,8 @@ public class ApiEdmonton {
 			Location loc = new Location(latit,longit);
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
 			propVals.add(prop);
+			//purely for testing purposes
+			System.out.println(propVals.size()/limit);
 		}
 	}
 }
