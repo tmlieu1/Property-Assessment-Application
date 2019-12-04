@@ -562,19 +562,19 @@ public class InputGUI {
 		// if chart type is Bar
 		else if (this.chartType.contentEquals("Bar")) {
 			//configure axis titles
-			final CategoryAxis xAxis = new CategoryAxis();
-			final NumberAxis yAxis = new NumberAxis();
-			xAxis.setLabel(this.dataType);
-			yAxis.setLabel("Amount");
+			final CategoryAxis yAxis = new CategoryAxis();
+			final NumberAxis xAxis = new NumberAxis();
+			xAxis.setLabel("Amount");
+			yAxis.setLabel(this.dataType);
 			
 			// buffer barChart
-			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
+			BarChart<Number, String> barChart = new BarChart<Number, String>(xAxis,yAxis);
 			String title = "Number of Properties by " + this.dataType;
 			barChart.setTitle(title);
-			XYChart.Series<String, Number> bar = new XYChart.Series<String, Number>();
+			XYChart.Series<Number, String> bar = new XYChart.Series<Number, String>();
 			Set<String> keys = chartData.keySet();
 			for (String key: keys) {
-				bar.getData().add(new XYChart.Data<String, Number>(key, chartData.get(key)));
+				bar.getData().add(new XYChart.Data<Number, String>(chartData.get(key),key));
 			}
 			barChart.getData().addAll(bar);
 			return barChart;
