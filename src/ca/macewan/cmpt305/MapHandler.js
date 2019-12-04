@@ -18,7 +18,7 @@ function main(){
     var heatData = [];
     
     var edmonton = {lat: 53.5461, lng: -113.4938};
-    // request.open('GET', 'https://data.edmonton.ca/resource/q7d6-ambg.json');
+    request.open('GET', 'https://data.edmonton.ca/resource/q7d6-ambg.json');
     
     // fetch('../../../../Properties.json')
     //     .then((data) =>{
@@ -61,7 +61,8 @@ function main(){
             data.forEach(element => {
                 // latitudeList.push(element.latitude);
                 // longitudeList.push(element.longitude);
-                assessmentList.push(element.total_asmt);
+                // assessmentList.push(element.total_asmt);
+
                 var latLong = new google.maps.LatLng(element.latitude, element.longitude);
                 heatData.push(latLong);
             });
