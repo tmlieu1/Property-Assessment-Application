@@ -109,7 +109,7 @@ public class InputGUI {
 	public VBox configureInput() {
 		//vBox input labels
 		final Label labelIn = new Label("Find Property Assessment");
-		labelIn.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		labelIn.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		final Label labelAcc = new Label("Account Number:");
 		labelAcc.setFont(new Font("Arial", 12));
 		final Label labelAddr = new Label("Address (#suite #house street):");
@@ -135,7 +135,7 @@ public class InputGUI {
 		upperValField = new TextField();
 		lowerValField.setTextFormatter(new TextFormatter<Integer> (new IntegerStringConverter(), 0, intFilter));
 		upperValField.setTextFormatter(new TextFormatter<Integer> (new IntegerStringConverter(), 0, intFilter));
-		HBox hBoxCur = new HBox(10);
+		HBox hBoxCur = new HBox(5);
 		hBoxCur.getChildren().addAll(lowerValField, upperValField);
 		
 		//vBox input comboBox
@@ -155,14 +155,14 @@ public class InputGUI {
 		nbhField = new TextField();
 		
 		//hBox btn
-		HBox hBoxBtn = new HBox(10);
+		HBox hBoxBtn = new HBox(5);
 		Button resetBtn = new Button("Reset");
 		resetBtn.setOnMouseClicked(new ResetButtonListener());
 		hBoxBtn.getChildren().addAll(searchBtn, resetBtn);
 		
 		//button and current file label
 		final Label labelFile = new Label("Current Dataset");
-		labelFile.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		labelFile.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		labelCurr = new Label(file.getName());
 		labelCurr.setFont(new Font("Arial", 12));
 		
@@ -202,14 +202,14 @@ public class InputGUI {
 		});
 		
 		//button hbox
-		HBox hBox = new HBox(10);
+		HBox hBox = new HBox(5);
 		hBox.getChildren().addAll(button, buttonJSON);
 		
 		//separator
 		Separator sep1 = new Separator();
 		
 		//vBoxIn configuration
-		vBoxIn = new VBox(10);
+		vBoxIn = new VBox(5);
 		vBoxIn.setStyle("-fx-padding: 10;" +
 				"-fx-border-style: solid inside;" +
 				"-fx-border-width: 1;" +
@@ -591,13 +591,13 @@ public class InputGUI {
 		
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
-		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		final Label labelChart = new Label("Charts");
-		labelChart.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		labelChart.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		final Label labelTypeData = new Label("Data Type Selection");
-		labelTypeData.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		labelTypeData.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		final Label labelData = new Label("Data Type");
-		labelData.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		labelData.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		
 		//comboBox for chart type
 		ObservableList<String> options = FXCollections.observableArrayList(
