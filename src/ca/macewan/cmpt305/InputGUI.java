@@ -3,8 +3,10 @@ package ca.macewan.cmpt305;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.UnaryOperator;
 
 import org.json.JSONException;
@@ -19,7 +21,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -33,6 +41,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -57,16 +66,21 @@ public class InputGUI {
 	private ComboBox<String> classComboBox;
 	private TextField lowerValField;
 	private TextField upperValField;
-	
-	//displays
+	private FileChooser fileChooser;
+	private Label labelCurr;
 	private VBox vBoxIn;
 	private TextArea statistics;
 	private Button button;
 	private Button buttonJSON;
-	private FileChooser fileChooser;
-	private Label labelCurr;
+	
+	//table
 	private TableView <Property> table;
-	private Chart graph;
+	
+	//chart
+	private VBox vBoxChart;
+	private String chartType = "";
+	private String dataType = "";
+	private Chart chart;
 	
 	/**
 	 * Initializes the data for the class.
@@ -400,5 +414,229 @@ public class InputGUI {
 		sortedData = new SortedList<Property>(filteredData);
 	}
 
+
+	/******************************************************************************************************************
+	 * CHART STUFF
+	 ******************************************************************************************************************/
+	/*
+	 * Purpose: Create a map, from factoring the Assessment class
+	 * Parameters: None
+	 * Returns: Map<String, Integer>
+	 *  
+	 */
+	public Map<String, Integer> createMapAssClass() {
+		Map<String, Integer> map = new HashMap<String,Integer>();
+		String name;
+		// if the data is empty go to the next line of data
+		for (int i = 0; i < this.filteredData.size(); i++) {
+			if (this.filteredData.get(i).getAssessedClass().contentEquals("")) {
+				continue;
+			}
+			// try and catch for adding or appending new keys to the map
+			try {
+				// if the name exists inside the map
+				name = this.filteredData.get(i).getAssessedClass();
+				int val = map.get(this.filteredData.get(i).getAssessedClass());
+				// replace value with an incremented one
+				map.replace(name,++val);
+				
+			} catch (Exception e) {
+				// adds new key to map
+				name = this.filteredData.get(i).getAssessedClass();
+				map.put(name, 1);
+			}
+		}
+		return map;
+	}
 	
+	
+	/*
+	 * Purpose: Create a map, from factoring the Ward area
+	 * Parameters: None
+	 * Return: Map<String, Integer>
+	 * 
+	 */
+	public Map<String, Integer> createMapWard() {
+		Map<String, Integer> map = new HashMap<String,Integer>();
+		String name;
+		// similar to the assessment class one
+		for (int i = 0; i < this.filteredData.size()-1; i++) {
+			if (this.filteredData.get(i).getNeighbourhood().getNBHWard().contentEquals("")) {
+				continue;
+			}
+			try {
+				name = this.filteredData.get(i).getNeighbourhood().getNBHWard();
+				int val = map.get(this.filteredData.get(i).getNeighbourhood().getNBHWard());
+				map.replace(name,++val);
+				
+			} catch (Exception e) {
+				name = this.filteredData.get(i).getNeighbourhood().getNBHWard();
+				map.put(name, 1);
+			}
+		}
+		return map;
+	}
+	
+	/*
+	 * Purpose: Create a map from factoring the Neighbourhoods
+	 * Parameter: None
+	 * Return: Map<String, Integer>
+	 */
+	public Map<String, Integer> createMapNeigh() {
+		Map<String, Integer> map = new HashMap<String,Integer>();
+		String name;
+		// similar to the ones above
+		for (int i = 0; i < this.filteredData.size(); i++) {
+			if (this.filteredData.get(i).getNBHName().contentEquals("")) {
+				continue;
+			}
+			try {
+				name = this.filteredData.get(i).getNBHName();
+				int val = map.get(this.filteredData.get(i).getNBHName());
+				map.replace(name,++val);
+				
+			} catch (Exception e) {
+				name = this.filteredData.get(i).getNBHName();
+				map.put(name, 1);
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * creates a hashmap based on the data choice
+	 * @param dataChoice
+	 * @return
+	 */
+	private Map<String, Integer> getChartData(String dataChoice){
+		Map <String, Integer> chartData = new HashMap<String, Integer>();
+		if (dataChoice == "Neighbourhood") {
+			chartData = createMapNeigh();
+		}
+		else if (dataChoice == "Assessment Class") {
+			chartData = createMapAssClass();
+		}
+		else {
+			chartData = createMapWard();
+		}
+		return chartData;
+	}
+	
+	/*
+	 * Purpose: This function will create a chart depending on the type of chart and data
+	 * 			and returns the chart
+	 * Parameter: None
+	 * Return: Chart Class
+	 * 
+	 */
+	@SuppressWarnings({ "unchecked" })
+	public Chart configureChart(){
+		System.out.println("create chart");
+		System.out.println(chartType);
+		System.out.println(chartType.contentEquals("Bar"));
+		
+		// initializes null chart as an empty chart
+		PieChart null_chart = new PieChart();
+		if (dataType.contentEquals("") || chartType.contentEquals("")) {
+			// if the data does not exist then it cannot produce a graph
+			return null_chart;
+		}
+		
+		// create a buffer map
+		Map<String, Integer> chartData = getChartData(dataType);
+		
+		// if the chart type is pie, get all the keys in the map and add all the data to the pie chart.
+		if (chartType.contentEquals("Pie")) {
+			PieChart pieChart = new PieChart();
+			System.out.println("Im baking pie");
+			// gets all the keys in the map
+			Set<String> keys = chartData.keySet();
+			// for loop to add all the data to the pie chart
+			for (String key: keys){
+				pieChart.getData().add(new PieChart.Data(key, chartData.get(key)));
+			}
+			return pieChart;
+		}
+		
+		// if chart type is Bar
+		else if (this.chartType.contentEquals("Bar")) {
+			System.out.println("Bar is here");
+			final CategoryAxis xAxis = new CategoryAxis();
+			final NumberAxis yAxis = new NumberAxis();
+			xAxis.setLabel(this.dataType);
+			yAxis.setLabel("Amount");
+			// buffer barChart
+			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
+			barChart.setTitle("Bar Graph");
+			System.out.println("im in the milky way");
+			XYChart.Series<String, Number> bar = new XYChart.Series<String, Number>();
+			System.out.println("found the 3 musketters");
+			Set<String> keys = chartData.keySet();
+			for (String key: keys) {
+				bar.getData().add(new XYChart.Data<String, Number>(key, chartData.get(key)));
+			}
+			barChart.getData().addAll(bar);
+			System.out.println("Thats a candy bar");
+			return barChart;
+		}
+		else {
+			System.out.println("OMG");
+			return null_chart;
+		}
+	}
+	
+	public VBox configureChartInput() {
+		vBoxChart = new VBox(10);
+		vBoxChart.setAlignment(Pos.CENTER);
+		//labels
+		final Label labelChoice = new Label("Chart Selection");
+		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		final Label labelChart = new Label("Charts");
+		labelChart.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		final Label labelTypeData = new Label("Data Type Selection");
+		labelTypeData.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		final Label labelData = new Label("Data Type");
+		labelData.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		
+		//comboBox for chart type
+		ObservableList<String> options = FXCollections.observableArrayList(
+				"Pie",
+				"Bar"
+				);
+		ComboBox<String>chartComboBox = new ComboBox<String>(options);
+		chartComboBox.setValue("");
+		
+		//combobox for chart parameters
+		ObservableList<String> optionData = FXCollections.observableArrayList(
+				"Neighbourhood",
+				"Assessment Class",
+				"Ward");
+		ComboBox<String> dataComboBox = new ComboBox<String>(optionData);
+		dataComboBox.setValue("");
+		
+		//hbox and button
+		HBox hBoxBtn = new HBox(10);
+		Button confirmBtn = new Button("Confirm");
+		hBoxBtn.getChildren().add(confirmBtn);
+		confirmBtn.setOnAction(event -> {
+			System.out.println("Help");
+			chartType = chartComboBox.valueProperty().getValue();
+			dataType = dataComboBox.valueProperty().getValue();
+			chart = configureChart();
+			if (chart == null) {
+				throw new NullPointerException("Error Null");
+			}
+			vBoxChart.getChildren().clear();
+			vBoxChart.getChildren().add(chart);
+		});
+		
+		//vbox
+		VBox vBoxChartInput = new VBox(10);
+		vBoxChartInput.getChildren().addAll(labelChoice, chartComboBox,labelTypeData, dataComboBox, hBoxBtn);
+		return vBoxChartInput;
+	}
+	
+	public VBox getChartBox() {
+		return vBoxChart;
+	}
 }

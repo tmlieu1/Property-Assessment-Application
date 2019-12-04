@@ -25,7 +25,7 @@ public class ChartBuilder {
 	private VBox chartVBox;
 	
 	/*
-	 * Consturctor for ChartBuilder Class
+	 * Constructor for ChartBuilder Class
 	 * Will use the parameters VBox, List<Property>
 	 */
 	public ChartBuilder(VBox chartVBox, List<Property> data) {
@@ -119,6 +119,25 @@ public class ChartBuilder {
 		return map;
 	}
 
+	/**
+	 * creates a hashmap based on the data choice
+	 * @param dataChoice
+	 * @return
+	 */
+	private Map<String, Integer> getChartData(String dataChoice){
+		Map <String, Integer> chartData = new HashMap<String, Integer>();
+		if (dataChoice == "Neighbourhood") {
+			chartData = createMapNeigh();
+		}
+		else if (dataChoice == "Assessment Class") {
+			chartData = createMapAssClass();
+		}
+		else {
+			chartData = createMapWard();
+		}
+		return chartData;
+	}
+	
 	/*
 	 * Purpose: This function will create a chart depending on the type of chart and data
 	 * 			and returns the chart
@@ -127,29 +146,22 @@ public class ChartBuilder {
 	 * 
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public Chart createChart(){
+	public Chart configureChart(){
 		System.out.println("create chart");
 		System.out.println(this.chartType);
 		System.out.println(this.chartType.contentEquals("Bar"));
+		
 		// initializes null chart as an empty chart
 		PieChart null_chart = new PieChart();
 		if (this.dataType.contentEquals("") || this.chartType.contentEquals("")) {
 			// if the data does not exist then it cannot produce a graph
 			return null_chart;
 		}
+		
 		// create a buffer map
-		Map<String, Integer> chartData = new HashMap<String, Integer>();
-		// find which data type is chosen
-		if (this.dataType == "Neighbourhood") {
-			chartData = createMapNeigh();
-		}
-		else if (this.dataType == "Assessment Class") {
-			chartData = createMapAssClass();
-		}
-		else {
-			chartData = createMapWard();
-		}
-		// if the chart type is pie
+		Map<String, Integer> chartData = getChartData(dataType);
+		
+		// if the chart type is pie, get all the keys in the map and add all the data to the pie chart.
 		if (this.chartType.contentEquals("Pie")) {
 			PieChart pieChart = new PieChart();
 			System.out.println("Im baking pie");
@@ -161,17 +173,17 @@ public class ChartBuilder {
 			}
 			return pieChart;
 		}
+		
 		// if chart type is Bar
 		else if (this.chartType.contentEquals("Bar")) {
 			System.out.println("Bar is here");
 			final CategoryAxis xAxis = new CategoryAxis();
 			final NumberAxis yAxis = new NumberAxis();
-			
+			xAxis.setLabel(this.dataType);
+			yAxis.setLabel("Value");
 			// buffer barChart
 			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
 			barChart.setTitle("Bar Graph");
-			xAxis.setLabel(this.dataType);
-			yAxis.setLabel("Value");
 			System.out.println("im in the milky way");
 			XYChart.Series<String, Number> bar = new XYChart.Series<String, Number>();
 			System.out.println("found the 3 musketters");
@@ -185,16 +197,15 @@ public class ChartBuilder {
 		}
 		else {
 			System.out.println("OMG");
-			return (null_chart);
+			return null_chart;
 		}
-}
+	}
 
 	public Chart getChart() {
 		return this.graph;
 	}
 	
 	public VBox configureChartInput() {
-		
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
 		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 16));
@@ -229,7 +240,7 @@ public class ChartBuilder {
 			System.out.println("Help");
 			this.chartType = chartComboBox.valueProperty().getValue();
 			this.dataType = dataComboBox.valueProperty().getValue();
-			this.graph = createChart();
+			this.graph = configureChart();
 			if (this.graph == null) {
 				throw new NullPointerException("Error Null");
 			}

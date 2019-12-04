@@ -19,7 +19,7 @@ public class RootNodeGUI {
 	
 	private TableView<Property> table;
 	private FilteredList <Property> filteredData; 
-	List <Property> rawData;
+	private List <Property> rawData;
 	private TextArea statistics;
 	private File file;
 	private ApiEdmonton API;
@@ -74,8 +74,7 @@ public class RootNodeGUI {
 		//creates the label
 		final Label label = new Label("Edmonton Property Assessments");
 		label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-		
-		//creates the label, sets the style, and populates it
+		//creates the vbox, sets the style, and populates it
 		VBox vBox = new VBox(10);
 		vBox.setStyle("-fx-padding: 10;" +
 				"-fx-border-style: solid inside;" +
@@ -83,7 +82,6 @@ public class RootNodeGUI {
 				"-fx-border-insets: 10, 10, 10, 10;" +
 				"-fx-border-color: lightgray;");
 		vBox.getChildren().addAll(label, table);
-		
 		return vBox;
 	}
 }

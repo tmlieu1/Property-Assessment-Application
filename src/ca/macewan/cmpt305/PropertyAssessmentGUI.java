@@ -7,7 +7,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -50,7 +49,7 @@ public class PropertyAssessmentGUI extends Application {
 		BorderPane rootNode = tableNode.Pane();
 		
 		//BorderPane secondNode
-		RootNodeGUI chartNode = new RootNodeGUI(filteredData, rawData, file, YEG);
+		SecondNodeGUI chartNode = new SecondNodeGUI(filteredData, rawData, file, YEG);
 		BorderPane secondNode = chartNode.Pane();
 	
 		//webview
@@ -68,7 +67,7 @@ public class PropertyAssessmentGUI extends Application {
 		tabPane.getTabs().addAll(tab1, tab2, tab3);
 		
 		//scene
-		Scene scene = new Scene(tabPane, Color.SLATEGRAY);
+		Scene scene = new Scene(tabPane);
 		primaryStage.setTitle("Edmonton Property Assessments");
 		primaryStage.getIcons().add(new Image("file:edmonton-logo.png"));
 		primaryStage.setMaximized(true);
