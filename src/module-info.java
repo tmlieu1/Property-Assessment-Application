@@ -6,5 +6,5 @@ module edmontonAssessment {
 	requires javafx.web;
 	requires java.base;
 	requires com.google.gson;
-	requires java.json;
+	requires javafx.fxml;
 }
