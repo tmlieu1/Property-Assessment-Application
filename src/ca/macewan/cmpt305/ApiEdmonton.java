@@ -41,8 +41,6 @@ public class ApiEdmonton {
 		for(String c : cArray) {
 			if (c.matches("[0-9]")){
 				num.add(c);
-				//purely for testing purposes
-				System.out.println((double)num.size()/(double)limit);
 			}
 		}
 		return Integer.parseInt(String.join("", num)) + 1;
