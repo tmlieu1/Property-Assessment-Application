@@ -535,11 +535,7 @@ public class InputGUI {
 	 * 
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public Chart configureChart(){
-		System.out.println("create chart");
-		System.out.println(chartType);
-		System.out.println(chartType.contentEquals("Bar"));
-		
+	public Chart configureChart(){	
 		// initializes null chart as an empty chart
 		PieChart null_chart = new PieChart();
 		if (dataType.contentEquals("") || chartType.contentEquals("")) {
@@ -555,7 +551,6 @@ public class InputGUI {
 			PieChart pieChart = new PieChart();
 			String title = "Number of Properties by " + this.dataType;
 			pieChart.setTitle(title);
-			System.out.println("Im baking pie");
 			// gets all the keys in the map
 			Set<String> keys = chartData.keySet();
 			// for loop to add all the data to the pie chart
@@ -567,7 +562,6 @@ public class InputGUI {
 		
 		// if chart type is Bar
 		else if (this.chartType.contentEquals("Bar")) {
-			System.out.println("Bar is here");
 			//configure axis titles
 			final CategoryAxis xAxis = new CategoryAxis();
 			final NumberAxis yAxis = new NumberAxis();
@@ -578,19 +572,15 @@ public class InputGUI {
 			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
 			String title = "Number of Properties by " + this.dataType;
 			barChart.setTitle(title);
-			System.out.println("im in the milky way");
 			XYChart.Series<String, Number> bar = new XYChart.Series<String, Number>();
-			System.out.println("found the 3 musketters");
 			Set<String> keys = chartData.keySet();
 			for (String key: keys) {
 				bar.getData().add(new XYChart.Data<String, Number>(key, chartData.get(key)));
 			}
 			barChart.getData().addAll(bar);
-			System.out.println("Thats a candy bar");
 			return barChart;
 		}
 		else {
-			System.out.println("OMG");
 			return null_chart;
 		}
 	}
@@ -627,7 +617,6 @@ public class InputGUI {
 		dataComboBox.setValue("");
 		
 		searchBtn.setOnAction(event -> {
-			System.out.println("Help");
 			search();
 			chartType = chartComboBox.valueProperty().getValue();
 			dataType = dataComboBox.valueProperty().getValue();
@@ -637,7 +626,7 @@ public class InputGUI {
 			}
 			
 			if (dataType == "Neighbourhood" && chartType == "Bar") {
-				chart.setMinSize(chartPane.getWidth() * 6, chartPane.getHeight() * 0.9);
+				chart.setMinSize(chartPane.getWidth() * 8, chartPane.getHeight() * 0.9);
 			}
 			else {
 				chart.setMinSize(chartPane.getWidth() * 0.9, chartPane.getHeight() * 0.9);
