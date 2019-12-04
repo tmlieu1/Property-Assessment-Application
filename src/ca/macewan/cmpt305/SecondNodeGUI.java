@@ -62,6 +62,7 @@ public class SecondNodeGUI {
 		
 		//separator and statistics textarea configured
 		Separator sep = new Separator();
+		Separator sep2 = new Separator();
 		statistics = input.configureStats();
 		
 		
@@ -77,7 +78,7 @@ public class SecondNodeGUI {
 		vBoxIn.prefWidthProperty().bind(secNode.widthProperty().multiply(0.18));
 		vBoxChart.prefWidthProperty().bind(secNode.widthProperty().multiply(0.82));
 		vBoxChart.prefHeightProperty().bind(secNode.heightProperty());
-		vBoxIn.getChildren().addAll(sep, statistics, vBoxChartInput);
+		vBoxIn.getChildren().addAll(sep, vBoxChartInput, sep2, statistics);
 		
 		secNode.setLeft(vBoxIn);
 		secNode.setCenter(vBoxChart);

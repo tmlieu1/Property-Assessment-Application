@@ -72,6 +72,7 @@ public class InputGUI {
 	private TextArea statistics;
 	private Button button;
 	private Button buttonJSON;
+	private Button searchBtn;
 	
 	//table
 	private TableView <Property> table;
@@ -94,6 +95,7 @@ public class InputGUI {
 		this.file = file;
 		this.statistics = new TextArea();
 		this.API = API;
+		searchBtn = new Button("Search");
 		table = new TableView<Property>();
 		rawFileData(file.getName());
 		populateData();
@@ -156,9 +158,7 @@ public class InputGUI {
 		
 		//hBox btn
 		HBox hBoxBtn = new HBox(10);
-		Button searchBtn = new Button("Search");
 		Button resetBtn = new Button("Reset");
-		searchBtn.setOnMouseClicked(new SearchButtonListener());
 		resetBtn.setOnMouseClicked(new ResetButtonListener());
 		hBoxBtn.getChildren().addAll(searchBtn, resetBtn);
 		
@@ -171,16 +171,21 @@ public class InputGUI {
 		//filechooser
 		button = new Button("Select File");
 		fileChooser = new FileChooser();
+		
 		String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 		fileChooser.setInitialDirectory(new File(currentPath));
 		button.setOnAction(e -> {
 			file = fileChooser.showOpenDialog(null);
-			rawFileData(file.getName());
-			populateData();
-			labelCurr.setText(file.getName());
-			updateTable();
-			reset();
-			search();
+			if (file == null) {
+			}
+			else {
+				rawFileData(file.getName());
+				populateData();
+				labelCurr.setText(file.getName());
+				updateTable();
+				reset();
+				search();
+			}
 		});
 		
 		//jsonchooser
@@ -286,7 +291,8 @@ public class InputGUI {
 	        public ObservableValue<Double> call(CellDataFeatures<Property, Double> p) {
 	            return new SimpleDoubleProperty(p.getValue().getLocation().getLongitude()).asObject();                
 	        }
-		}); 
+		});
+		searchBtn.setOnMouseClicked(new SearchButtonListener());
 		table.getColumns().setAll(accNumCol, addressCol, valCol, classCol, nbhCol, latCol, longCol);
 		updateTable();
 		return table;
@@ -548,6 +554,8 @@ public class InputGUI {
 		// if the chart type is pie, get all the keys in the map and add all the data to the pie chart.
 		if (chartType.contentEquals("Pie")) {
 			PieChart pieChart = new PieChart();
+			String title = "Number of Properties by " + this.dataType;
+			pieChart.setTitle(title);
 			System.out.println("Im baking pie");
 			// gets all the keys in the map
 			Set<String> keys = chartData.keySet();
@@ -567,7 +575,8 @@ public class InputGUI {
 			yAxis.setLabel("Amount");
 			// buffer barChart
 			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
-			barChart.setTitle("Bar Graph");
+			String title = "Number of Properties by " + this.dataType;
+			barChart.setTitle(title);
 			System.out.println("im in the milky way");
 			XYChart.Series<String, Number> bar = new XYChart.Series<String, Number>();
 			System.out.println("found the 3 musketters");
@@ -614,12 +623,9 @@ public class InputGUI {
 		ComboBox<String> dataComboBox = new ComboBox<String>(optionData);
 		dataComboBox.setValue("");
 		
-		//hbox and button
-		HBox hBoxBtn = new HBox(10);
-		Button confirmBtn = new Button("Confirm");
-		hBoxBtn.getChildren().add(confirmBtn);
-		confirmBtn.setOnAction(event -> {
+		searchBtn.setOnAction(event -> {
 			System.out.println("Help");
+			search();
 			chartType = chartComboBox.valueProperty().getValue();
 			dataType = dataComboBox.valueProperty().getValue();
 			chart = configureChart();
@@ -632,7 +638,7 @@ public class InputGUI {
 		
 		//vbox
 		VBox vBoxChartInput = new VBox(10);
-		vBoxChartInput.getChildren().addAll(labelChoice, chartComboBox,labelTypeData, dataComboBox, hBoxBtn);
+		vBoxChartInput.getChildren().addAll(labelChoice, chartComboBox,labelTypeData, dataComboBox);
 		return vBoxChartInput;
 	}
 	
