@@ -576,6 +576,7 @@ public class InputGUI {
 			}
 			barChart.getData().addAll(bar);
 			return barChart;
+		}
 		
 		else {
 			return null_chart;
@@ -626,7 +627,7 @@ public class InputGUI {
 			}
 			
 			if (dataType == "Neighbourhood" && chartType == "Bar") {
-				chart.setMinSize(chartPane.getWidth() * 8, chartPane.getHeight() * 0.9);
+				chart.setMinSize(chartPane.getWidth() * 0.9, chartPane.getHeight() * 8);
 			}
 			else {
 				chart.setMinSize(chartPane.getWidth() * 0.9, chartPane.getHeight() * 0.9);
