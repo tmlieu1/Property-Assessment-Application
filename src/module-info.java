@@ -6,5 +6,5 @@ module edmontonAssessment {
 	requires javafx.graphics;
 	requires javafx.web;
 	requires java.base;
-	requires org.junit.jupiter.api;
+	requires com.google.gson;
 }

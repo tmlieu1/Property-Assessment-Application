@@ -26,7 +26,7 @@ public class ChartBuilder {
 	private VBox chartVBox;
 	
 	/*
-	 * Consturctor for ChartBuilder Class
+	 * Constructor for ChartBuilder Class
 	 * Will use the parameters VBox, List<Property>
 	 */
 	public ChartBuilder(VBox chartVBox, FilteredList<Property> data) {
@@ -120,6 +120,25 @@ public class ChartBuilder {
 		return map;
 	}
 
+	/**
+	 * creates a hashmap based on the data choice
+	 * @param dataChoice
+	 * @return
+	 */
+	private Map<String, Integer> getChartData(String dataChoice){
+		Map <String, Integer> chartData = new HashMap<String, Integer>();
+		if (dataChoice == "Neighbourhood") {
+			chartData = createMapNeigh();
+		}
+		else if (dataChoice == "Assessment Class") {
+			chartData = createMapAssClass();
+		}
+		else {
+			chartData = createMapWard();
+		}
+		return chartData;
+	}
+	
 	/*
 	 * Purpose: This function will create a chart depending on the type of chart and data
 	 * 			and returns the chart
@@ -134,19 +153,11 @@ public class ChartBuilder {
 			// if the data does not exist then it cannot produce a graph
 			return null_chart;
 		}
+		
 		// create a buffer map
-		Map<String, Integer> chartData = new HashMap<String, Integer>();
-		// find which data type is chosen
-		if (this.dataType == "Neighbourhood") {
-			chartData = createMapNeigh();
-		}
-		else if (this.dataType == "Assessment Class") {
-			chartData = createMapAssClass();
-		}
-		else {
-			chartData = createMapWard();
-		}
-		// if the chart type is pie
+		Map<String, Integer> chartData = getChartData(dataType);
+		
+		// if the chart type is pie, get all the keys in the map and add all the data to the pie chart.
 		if (this.chartType.contentEquals("Pie")) {
 			PieChart pieChart = new PieChart();
 			// gets all the keys in the map
@@ -157,11 +168,13 @@ public class ChartBuilder {
 			}
 			return pieChart;
 		}
+		
 		// if chart type is Bar
 		else if (this.chartType.contentEquals("Bar")) {
 			final CategoryAxis xAxis = new CategoryAxis();
 			final NumberAxis yAxis = new NumberAxis();
-			
+			xAxis.setLabel(this.dataType);
+			yAxis.setLabel("Value");
 			// buffer barChart
 			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
 			barChart.setTitle("Bar Graph");
@@ -180,13 +193,13 @@ public class ChartBuilder {
 		else {
 			return (null_chart);
 		}
-}
+	}
 
 	public Chart getChart() {
 		return this.graph;
 	}
 	
-	public VBox createInputBox() {
+	public VBox configureChartInput() {
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
 		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 16));
@@ -197,43 +210,40 @@ public class ChartBuilder {
 		final Label labelData = new Label("Data Type");
 		labelData.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 		
-		//comboBox and button
+		//comboBox for chart type
 		ObservableList<String> options = FXCollections.observableArrayList(
 				"Pie",
 				"Bar"
 				);
 		ComboBox<String>chartComboBox = new ComboBox<String>(options);
 		chartComboBox.setValue("");
+		
+		//combobox for chart parameters
 		ObservableList<String> optionData = FXCollections.observableArrayList(
 				"Neighbourhood",
 				"Assessment Class",
 				"Ward");
 		ComboBox<String> dataComboBox = new ComboBox<String>(optionData);
 		dataComboBox.setValue("");
+		
+		//hbox and button
 		HBox hBoxBtn = new HBox(10);
 		Button confirmBtn = new Button("Confirm");
+		hBoxBtn.getChildren().add(confirmBtn);
 		confirmBtn.setOnAction(event -> {
 			this.chartType = chartComboBox.valueProperty().getValue();
 			this.dataType = dataComboBox.valueProperty().getValue();
-			this.graph = createChart();
+			this.graph = configureChart();
 			if (this.graph == null) {
 				throw new NullPointerException("Error Null");
 			}
 			this.chartVBox.getChildren().clear();
 			this.chartVBox.getChildren().add(this.graph);
-			
 		});
-		hBoxBtn.getChildren().add(confirmBtn);
 		
-		//vbox for the charts
+		//vbox
 		VBox vBoxCharts = new VBox(10);
-		vBoxCharts.setStyle("-fx-padding: 10;" +
-				"-fx-border-style: solid inside;" +
-				"-fx-border-width: 1;" +
-				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: lightgray;");
-		vBoxCharts.getChildren().addAll(labelChoice, chartComboBox);
-		vBoxCharts.getChildren().addAll(labelTypeData, dataComboBox, hBoxBtn);
+		vBoxCharts.getChildren().addAll(labelChoice, chartComboBox,labelTypeData, dataComboBox, hBoxBtn);
 		return vBoxCharts;
 	}
 }

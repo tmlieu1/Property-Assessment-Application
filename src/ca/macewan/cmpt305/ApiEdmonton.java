@@ -3,45 +3,92 @@ package ca.macewan.cmpt305;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javafx.scene.control.ProgressBar;
+
 import java.util.ArrayList;
 import java.io.IOException;
 
 public class ApiEdmonton {
-	private BufferedReader br;
+	private List<Property> propVals;
+	private int limit;
 	
-	public void getUrl() throws IOException{
-		URL url =  new URL("https://data.edmonton.ca/resource/q7d6-ambg.json?$limit=401117");
-		URLConnection con = url.openConnection();
-		InputStream is = con.getInputStream();
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		this.br = br;
-	}
-	
-	public BufferedReader getbr() {
-		return this.br;
-		
-	}
-	public List<Property> getExtractedAPIData(BufferedReader data) throws IOException, JSONException {
-		List<Property> propVals = new ArrayList<Property>();
-		String line = null;
-		StringBuilder sb = new StringBuilder();
-		while ((line = data.readLine()) != null) {
-			sb.append(line + '\n');
+	public ApiEdmonton() {
+		String urlCount = "https://data.edmonton.ca/resource/q7d6-ambg.json?$select=count(total_asmt)";
+		try {
+			//count
+			BufferedReader bc = getBR(urlCount);
+			String count = bc.readLine();
+			limit = getCount(count);
+			
+			//urlstring
+			String urlString = "https://data.edmonton.ca/resource/q7d6-ambg.json?$offset=390000&$limit=" + limit;
+			BufferedReader br = getBR(urlString);
+			extractAPIData(br);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		JSONArray jsonArray = new JSONArray(sb.toString());
+	}
+	
+	private int getCount(String strCount) {
+		String [] cArray = strCount.split("");
+		List<String> num = new ArrayList<String>();
+		for(String c : cArray) {
+			if (c.matches("[0-9]")){
+				num.add(c);
+			}
+		}
+		return Integer.parseInt(String.join("", num)) + 1;
+	}
+	
+	public BufferedReader getBR(String urlString) throws Exception{
+		BufferedReader br = null;
+		try {	
+			URL url = new URL(urlString);
+			URLConnection con = url.openConnection();
+			InputStream is = con.getInputStream();
+			br = new BufferedReader(new InputStreamReader(is));		
+			return br;
+		}
+		finally {
+			if (br != null) {
+			}
+		}
+	}
+	
+	public List<Property> getAPIData(){
+		return propVals;
+	}
+	
+  private static String readAll(Reader rd) throws IOException {
+	    StringBuilder sb = new StringBuilder();
+	    int cp;
+	    while ((cp = rd.read()) != -1) {
+	      sb.append((char) cp);
+	    }
+	    return sb.toString();
+	  }
+	
+	public void extractAPIData(BufferedReader data) throws IOException, JSONException {
+		propVals = new ArrayList<Property>();
+		String jsonText = readAll(data);
+		JSONArray jsonArray = new JSONArray(jsonText);
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject json = jsonArray.getJSONObject(i);
 			Integer account = json.getInt("account_number");
-			String suite = null;
+			String suite;
 			try {
 				suite = json.getString("suite");
-			} catch (Exception e) {
+			}
+			catch(Exception e) {
 				suite = "";
 			}
 			String house_num;			
@@ -85,6 +132,5 @@ public class ApiEdmonton {
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
 			propVals.add(prop);
 		}
-		return propVals;
 	}
 }
