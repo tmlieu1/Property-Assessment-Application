@@ -62,8 +62,8 @@ public class PropertyAssessmentGUI extends Application {
 		TabPane tabPane = new TabPane();
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		Tab tab1 = new Tab("Table", rootNode);
-		Tab tab2 = new Tab("Map", map);
-		Tab tab3 = new Tab("Charts", secondNode);
+		Tab tab2 = new Tab("Charts", secondNode);
+		Tab tab3 = new Tab("Map", map);
 		tabPane.getTabs().addAll(tab1, tab2, tab3);
 		
 		//scene
