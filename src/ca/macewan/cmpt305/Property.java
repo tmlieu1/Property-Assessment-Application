@@ -68,7 +68,6 @@ public class Property implements Comparable<Property> {
 				"\nNeighbourhood = " + neighbourhood + "\nLocation = " + location;
 	}
 	
-	//what to compare: assessedVal
 	public int compareTo (Property other) {
 		if (this.assessedVal > other.assessedVal) {
 			return 1;

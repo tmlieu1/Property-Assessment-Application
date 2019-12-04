@@ -2,8 +2,6 @@ package ca.macewan.cmpt305;
 
 import java.util.List;
 
-import javafx.collections.transformation.FilteredList;
-
 /* Refactor existing code by moving statistics functions into this class
  * 
  * */

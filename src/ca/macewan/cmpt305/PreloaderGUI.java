@@ -1,18 +1,15 @@
 package ca.macewan.cmpt305;
 
 import javafx.application.Preloader;
-import javafx.application.Preloader.StateChangeNotification.Type;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class PreloaderGUI extends Preloader{
@@ -26,7 +23,7 @@ public class PreloaderGUI extends Preloader{
 		Image image = new Image("file:yeglogo.png");
 		ImageView yeglogo = new ImageView();
 		yeglogo.setImage(image);
-		final Label wait = new Label("Please wait. . .");
+		final Label wait = new Label("Please wait...");
 		wait.setFont(new Font("Arial", 30));
 		wait.setAlignment(Pos.CENTER);
 		

@@ -21,7 +21,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
@@ -31,6 +30,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
@@ -41,7 +41,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -78,7 +77,7 @@ public class InputGUI {
 	private TableView <Property> table;
 	
 	//chart
-	private VBox vBoxChart;
+	private ScrollPane chartPane;
 	private String chartType = "";
 	private String dataType = "";
 	private Chart chart;
@@ -215,8 +214,8 @@ public class InputGUI {
 		vBoxIn.setStyle("-fx-padding: 10;" +
 				"-fx-border-style: solid inside;" +
 				"-fx-border-width: 1;" +
-				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: lightgray;");
+				"-fx-border-insets: 10, 10, 10, 10;"+
+				"-fx-border-color: a3a3a3;");
 		vBoxIn.getChildren().addAll(labelFile, labelCurr, hBox, sep1, labelIn, labelAcc, 
 				accNumField, labelAddr, addrField, labelNBH, nbhField, labelVal, hBoxCur,
 				labelClass, classComboBox, hBoxBtn);
@@ -569,10 +568,12 @@ public class InputGUI {
 		// if chart type is Bar
 		else if (this.chartType.contentEquals("Bar")) {
 			System.out.println("Bar is here");
+			//configure axis titles
 			final CategoryAxis xAxis = new CategoryAxis();
 			final NumberAxis yAxis = new NumberAxis();
 			xAxis.setLabel(this.dataType);
 			yAxis.setLabel("Amount");
+			
 			// buffer barChart
 			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis,yAxis);
 			String title = "Number of Properties by " + this.dataType;
@@ -595,8 +596,10 @@ public class InputGUI {
 	}
 	
 	public VBox configureChartInput() {
-		vBoxChart = new VBox(10);
-		vBoxChart.setAlignment(Pos.CENTER);
+		chartPane = new ScrollPane();
+		//vBoxChart = new VBox(10);
+		//vBoxChart.setAlignment(Pos.CENTER);
+		
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
 		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 16));
@@ -632,8 +635,17 @@ public class InputGUI {
 			if (chart == null) {
 				throw new NullPointerException("Error Null");
 			}
-			vBoxChart.getChildren().clear();
-			vBoxChart.getChildren().add(chart);
+			
+			if (dataType == "Neighbourhood" && chartType == "Bar") {
+				chart.setMinSize(chartPane.getWidth() * 6, chartPane.getHeight() * 0.9);
+			}
+			else {
+				chart.setMinSize(chartPane.getWidth() * 0.9, chartPane.getHeight() * 0.9);
+			}
+			chartPane.setContent(chart);
+			
+			//vBoxChart.getChildren().clear();
+			//vBoxChart.getChildren().add(chart);
 		});
 		
 		//vbox
@@ -642,7 +654,7 @@ public class InputGUI {
 		return vBoxChartInput;
 	}
 	
-	public VBox getChartBox() {
-		return vBoxChart;
+	public ScrollPane getChartBox() {
+		return chartPane;
 	}
 }
