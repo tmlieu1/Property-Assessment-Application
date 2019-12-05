@@ -435,21 +435,21 @@ public class InputGUI {
 		Map<String, Integer> map = new HashMap<String,Integer>();
 		String name;
 		//if the data is empty go to the next line of data
-		for (int i = 0; i < this.filteredData.size(); i++) {
-			if (this.filteredData.get(i).getAssessedClass().contentEquals("")) {
+		for (int i = 0; i < this.sortedData.size(); i++) {
+			if (this.sortedData.get(i).getAssessedClass().contentEquals("")) {
 				continue;
 			}
 			//try and catch for adding or appending new keys to the map
 			try {
 				//if the name exists inside the map
-				name = this.filteredData.get(i).getAssessedClass();
-				int val = map.get(this.filteredData.get(i).getAssessedClass());
+				name = this.sortedData.get(i).getAssessedClass();
+				int val = map.get(this.sortedData.get(i).getAssessedClass());
 				//replace value with an incremented one
 				map.replace(name,++val);
 				
 			} catch (Exception e) {
 				//adds new key to map
-				name = this.filteredData.get(i).getAssessedClass();
+				name = this.sortedData.get(i).getAssessedClass();
 				map.put(name, 1);
 			}
 		}
@@ -465,17 +465,17 @@ public class InputGUI {
 		Map<String, Integer> map = new HashMap<String,Integer>();
 		String name;
 		// similar to the assessment class one
-		for (int i = 0; i < this.filteredData.size()-1; i++) {
-			if (this.filteredData.get(i).getNeighbourhood().getNBHWard().contentEquals("")) {
+		for (int i = 0; i < this.sortedData.size()-1; i++) {
+			if (this.sortedData.get(i).getNeighbourhood().getNBHWard().contentEquals("")) {
 				continue;
 			}
 			try {
-				name = this.filteredData.get(i).getNeighbourhood().getNBHWard();
-				int val = map.get(this.filteredData.get(i).getNeighbourhood().getNBHWard());
+				name = this.sortedData.get(i).getNeighbourhood().getNBHWard();
+				int val = map.get(this.sortedData.get(i).getNeighbourhood().getNBHWard());
 				map.replace(name,++val);
 				
 			} catch (Exception e) {
-				name = this.filteredData.get(i).getNeighbourhood().getNBHWard();
+				name = this.sortedData.get(i).getNeighbourhood().getNBHWard();
 				map.put(name, 1);
 			}
 		}
@@ -490,17 +490,17 @@ public class InputGUI {
 		Map<String, Integer> map = new HashMap<String,Integer>();
 		String name;
 		// similar to the ones above
-		for (int i = 0; i < this.filteredData.size(); i++) {
-			if (this.filteredData.get(i).getNBHName().contentEquals("")) {
+		for (int i = 0; i < this.sortedData.size(); i++) {
+			if (this.sortedData.get(i).getNBHName().contentEquals("")) {
 				continue;
 			}
 			try {
-				name = this.filteredData.get(i).getNBHName();
-				int val = map.get(this.filteredData.get(i).getNBHName());
+				name = this.sortedData.get(i).getNBHName();
+				int val = map.get(this.sortedData.get(i).getNBHName());
 				map.replace(name,++val);
 				
 			} catch (Exception e) {
-				name = this.filteredData.get(i).getNBHName();
+				name = this.sortedData.get(i).getNBHName();
 				map.put(name, 1);
 			}
 		}
@@ -589,7 +589,6 @@ public class InputGUI {
 	 */
 	public VBox configureChartInput() {
 		chartPane = new ScrollPane();
-		
 		//labels
 		final Label labelChoice = new Label("Chart Selection");
 		labelChoice.setFont(Font.font("Arial", FontWeight.BOLD, 12));

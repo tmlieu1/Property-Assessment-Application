@@ -65,7 +65,8 @@ public class SecondNodeGUI {
 				"-fx-border-style: solid inside;" +
 				"-fx-border-width: 1;" +
 				"-fx-border-insets: 10, 10, 10, 10;" +
-				"-fx-border-color: a3a3a3;");
+				"-fx-border-color: a3a3a3;" +
+				"-fx-background-color:transparent;");
 		vBoxIn.prefWidthProperty().bind(secNode.widthProperty().multiply(0.18));
 		chartPane.prefWidthProperty().bind(secNode.widthProperty().multiply(0.82));
 		chartPane.prefHeightProperty().bind(secNode.heightProperty());
