@@ -1,36 +1,75 @@
 <!DOCTYPE html>
 <html>
+
   <head>
+    <title>Edmonton Properties</title>
+    <meta name = "viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel = "stylesheet" type="text/css" href="./styles.css">
     <style>
        /* Set the size of the div element that contains the map */
       #map {
-        height: 900px;  /* The height is 1000 pixels */
+        height: 800px;  /* The height is 400 pixels */
         width: 100%;  /* The width is the width of the web page */
+        padding: 1%;
+        margin: 1%;
        }
     </style>
   </head>
+  
   <body>
+    <h3>Edmonton Properties</h3>
     <!--The div element for the map -->
     <div id="map"></div>
-    <script>
-// Initialize and add the map
-function initMap() {
-  // The location of Edmonton
-  var edmonton = {lat: 53.5461, lng: -113.4938};
-  // The map, centered at Edmonton
-  var map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 12, center: edmonton});
-  // The marker, positioned at Edmonton
-  var marker = new google.maps.Marker({position: edmonton, map: map});
-}
+    <script type = 'text/javascript'>
+    // Initialize and add the map
+      window.heatData = [];
+      // var theMap = new google.maps.Map();
+      function initMap() {
+        // var heatData = [];
+        // The location of Edmonton
+        var edmonton = {lat: 53.5461, lng: -113.4938};
+        // The map, centered at Edmonton
+        window.theMap = new google.maps.Map(
+            document.getElementById('map'), {zoom: 12, center: edmonton , mapTypeId: 'terrain'});
+        // // The marker, positioned at Edmonton
+        // var marker = new google.maps.Marker({position: edmonton, map: map});
+        
+      }
+      var setHeatMap = function setHeatMap(lat, long){
+            // for(var i = 0; i < lat.length || i < long.length; i++){
+          var latLong = new google.maps.LatLng(lat, long);
+          window.heatData.push(latLong);
+            // }
+      }
+      
+      var createHeatMap = function createHeatMap(){
+        // var edmonton = {lat: 53.5461, lng: -113.4938};
+        // var theMap = new google.maps.Map(
+        //     document.getElementById('map'), {zoom: 12, center: edmonton , mapTypeId: 'terrain'});
+          var heatMap = new google.maps.visualization.HeatmapLayer({
+            data: window.heatData,
+            dissipating:false,
+            map: window.theMap
+          });
+      }
+      
     </script>
+
+        
+    <!-- <script src = "./PropertyAssessmentGUI.java" id="PropertyAssessmentGUI" type="text/java"></script> -->
+        
+    <script src = "./MapHandler.js" type="text/javascript"></script>
     <!--Load the API from the specified URL
     * The async attribute allows the browser to render the page while the API loads
     * The key parameter will contain your own API key (which is not needed for this tutorial)
     * The callback parameter executes the initMap() function
     -->
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCzolLE_i81Nc0aXE-qv8Nf0-EEeRCago&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCzolLE_i81Nc0aXE-qv8Nf0-EEeRCago&libraries=visualization&callback=main">
     </script>
+
+
+   
   </body>
 </html>

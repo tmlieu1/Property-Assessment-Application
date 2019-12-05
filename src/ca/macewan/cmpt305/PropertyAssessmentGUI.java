@@ -3,7 +3,10 @@ package ca.macewan.cmpt305;
 //javafx imports
 //import javafx.application.Application;
 import javafx.application.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.transformation.FilteredList;
+import javafx.concurrent.Worker.State;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -18,7 +21,6 @@ import javafx.scene.input.MouseEvent;
 
 //java utilities
 import java.util.List;
-
 import java.io.File;
 import java.text.NumberFormat;
 
@@ -71,6 +73,26 @@ public class PropertyAssessmentGUI extends Application {
 		WebView map = new WebView();
 		WebEngine engine = map.getEngine();
 		String url = this.getClass().getResource("/ca/macewan/cmpt305/website.html").toExternalForm();
+		engine.getLoadWorker().stateProperty().addListener(
+				new ChangeListener<State>() {
+		            public void changed(ObservableValue ov, State oldState, State newState) {
+		            	if(newState == State.SUCCEEDED) {
+		            		engine.executeScript("main()");
+//		                    //engine.executeScript("addPoint(0,-26.487000,151.984000)");
+//		                	InputGUI input = new InputGUI(filteredData, rawData, file, YEG);
+//		            		List<Property> rawerData = input.getRawData();
+//		            		double[] lat = new double[rawerData.size()];
+//		            		double[] lon = new double[rawerData.size()];
+//		            		for(int i = 0; i < rawerData.size(); i++) {
+////		            			lat[i] = rawerData.get(i).getLocation().getLatitude();
+////		            			lon[i] = rawerData.get(i).getLocation().getLongitude();
+//		            			engine.executeScript("setHeatMap(\"" + rawerData.get(i).getLocation().getLatitude() + "\", \"" + rawerData.get(i).getLocation().getLongitude() + "\")");
+//		            		}
+//		            		
+//		            		engine.executeScript("createHeatMap()");
+		                }
+		            }
+		        });
 		engine.load(url);
 		
 		//options
