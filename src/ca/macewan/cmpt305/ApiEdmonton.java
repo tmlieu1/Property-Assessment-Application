@@ -1,6 +1,8 @@
 package ca.macewan.cmpt305;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -10,6 +12,11 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 import java.io.IOException;
 
@@ -24,7 +31,7 @@ public class ApiEdmonton {
 		String urlCount = "https://data.edmonton.ca/resource/q7d6-ambg.json?$select=count(total_asmt)";
 		try {
 			//count
-			BufferedReader bc = getBR(urlCount);
+			BufferedReader bc = getbufferRead(urlCount);
 			String count = bc.readLine();
 			limit = getCount(count);
 			
@@ -65,11 +72,11 @@ public class ApiEdmonton {
 			URL url = new URL(urlString);
 			URLConnection con = url.openConnection();
 			InputStream is = con.getInputStream();
-			br = new BufferedReader(new InputStreamReader(is));		
-			return br;
+			bufferRead = new BufferedReader(new InputStreamReader(is));		
+			return bufferRead;
 		}
 		finally {
-			if (br != null) {
+			if (bufferRead != null) {
 			}
 		}
 	}
@@ -107,6 +114,8 @@ public class ApiEdmonton {
 		for (int i = 0; i < jsonArray.length(); i++) {
 			//fetching property info from the json and creating new properties from it
 			JSONObject json = jsonArray.getJSONObject(i);
+//			localJSON.write(json.toString());
+//			localJSON.flush();
 			Integer account = json.getInt("account_number");
 			String suite;
 			try {
@@ -153,7 +162,10 @@ public class ApiEdmonton {
 			Neighbourhood nbh = new Neighbourhood(neigh_id, neigh, ward);
 			Location loc = new Location(latit,longit);
 			Property prop = new Property(account, addr, ass_val, ass_clas, nbh, loc);
+//			createLocalJSON(prop);
 			propVals.add(prop);
 		}
+		
+//		localJSON.close();
 	}
 }
