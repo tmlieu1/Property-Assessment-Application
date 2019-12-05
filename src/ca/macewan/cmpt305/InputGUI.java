@@ -406,10 +406,6 @@ public class InputGUI {
 		}
 	}
 	
-	public List<Property> getRawData() {
-		return rawData;
-	}
-	
 	public void rawFileData(String filename){
 		rawData = FileReader.getTableData(filename);
 	}
